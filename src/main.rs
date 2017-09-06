@@ -3,8 +3,8 @@ extern crate cursive;
 use cursive::Cursive;
 use cursive::views::{Dialog, TextView};
 
+mod game;
 mod snake;
-
 
 fn main() {
     let mut siv = Cursive::new();
