@@ -5,14 +5,20 @@ use std::cmp;
 struct Game {
     w: u16,
     h: u16,
-    snake: Snake,
     d: Direction,
-    food: Option<(i16,i16)>
+    pub snake: Snake,
+    pub food: Option<(i16,i16)>
 }
 
 // Clamps value between bounds
-fn clamp(min: i16, val: i16, max: i16) -> i16 {
-    cmp::max(0, cmp::min(max, val))
+fn wrap(min: i16, val: i16, max: i16) -> i16 {
+    if val < min {
+        return max;
+    }
+    if val > max {
+        return min;
+    }
+    val
 }
 
 impl Game {
@@ -30,8 +36,8 @@ impl Game {
     }
 
     // Handlers border-crossing and translates coordinates when needed
-    fn translate(&self, mut pos: (i16,i16)) -> (i16,i16) {
-        (clamp(0, pos.0, self.w as i16 - 1), clamp(0, pos.1, self.h as i16 - 1))
+    fn translate(&self, pos: (i16,i16)) -> (i16,i16) {
+        (wrap(0, pos.0, self.w as i16 - 1), wrap(0, pos.1, self.h as i16 - 1))
     }
 
     // Ticks game state
@@ -41,4 +47,27 @@ impl Game {
         self.snake.goto(translated, None);
     }
 }
+
+#[test]
+fn test_tick() {
+    let mut game = Game::new(32, 32);
+    game.tick();
+    game.tick();
+    game.tick();
+
+    game.d = Direction::Bottom;
+    game.tick();
+    game.tick();
+    game.tick();
+    game.tick();
+
+    game.d = Direction::Top;
+    game.tick();
+    game.tick();
+    game.tick();
+    game.tick();
+
+    assert_eq!((29, 13), game.snake.head());
+}
+
 
