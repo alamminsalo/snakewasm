@@ -1,6 +1,6 @@
 // Snake object
 
-#[derive(PartialEq)]
+#[derive(Clone, PartialEq)]
 pub enum Direction {
     Top,
     Bottom,
@@ -23,18 +23,23 @@ impl Snake {
         }
     }
 
+    // Handles dir
+    fn dir(&self, mut dir: Direction) -> Direction {
+        // Head can't go backwards
+        if dir == Direction::Top && self.d == Direction::Bottom
+            || dir == Direction::Bottom && self.d == Direction::Top
+                || dir == Direction::Right && self.d == Direction::Left
+                || dir == Direction::Left && self.d == Direction::Right {
+                    dir = self.d.clone();
+                }
+        dir
+    }
+
     // Moves snake
     pub fn mv(&mut self, dir: Direction) -> (i16, i16) {
         self.body.pop();
-
-        // Head can't go backwards
-        if !(dir == Direction::Top && self.d == Direction::Bottom
-            || dir == Direction::Bottom && self.d == Direction::Top
-                || dir == Direction::Right && self.d == Direction::Left
-                || dir == Direction::Left && self.d == Direction::Right) {
-                    self.d = dir;
-                }
-
+        self.d = self.dir(dir);
+        
         // Insert to new pos
         let head = self.head();
         self.body.insert(0, match self.d {
@@ -46,6 +51,20 @@ impl Snake {
 
         // Return new head pos
         self.head()
+    }
+
+    // Peeks a place this direction would end up the snake
+    pub fn peek(&self, dir: Direction) -> (i16,i16) {
+        // Head can't go backwards
+        let d = self.dir(dir);
+
+        let head = self.head();
+        match d {
+            Direction::Top => (head.0, head.1 - 1),
+            Direction::Bottom => (head.0, head.1 + 1),
+            Direction::Left => (head.0 - 1, head.1),
+            Direction::Right => (head.0 + 1, head.1)
+        }
     }
 
     // Forces new head location
@@ -72,6 +91,7 @@ impl Snake {
     }
 }
 
+/**======== TESTS BEGIN ==========**/
 #[test]
 fn test_grow() {
     let mut snake = Snake::new();
@@ -112,11 +132,21 @@ fn test_goto() {
 #[test]
 fn test_goto_mv() {
     let mut snake = Snake::new();
-    let pos0 = snake.head();
     snake.goto((99,99), None);
-    let pos1 = snake.mv(Direction::Bottom);
-    let pos1 = snake.mv(Direction::Bottom);
+    snake.mv(Direction::Bottom);
+    snake.mv(Direction::Bottom);
 
     assert_eq!((99,100) , snake.body[1]);
+}
+
+#[test]
+fn test_peek() {
+    let mut snake = Snake::new();
+    snake.goto((99,99), None);
+    snake.mv(Direction::Bottom);
+    snake.mv(Direction::Bottom);
+
+    assert_eq!((100,101) , snake.peek(Direction::Right));
+    assert_eq!((99,101) , snake.head());
 }
 
