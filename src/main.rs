@@ -5,6 +5,7 @@ use cursive::views::{Dialog, TextView};
 
 mod game;
 mod snake;
+mod util;
 
 fn main() {
     let mut siv = Cursive::new();

@@ -1,6 +1,6 @@
 // Snake object
 
-#[derive(Clone, PartialEq)]
+#[derive(Clone, PartialEq, Debug)]
 pub enum Direction {
     Top,
     Bottom,
@@ -10,7 +10,7 @@ pub enum Direction {
 
 pub struct Snake {
     pub body: Vec<(i16,i16)>,
-    pub d: Direction,
+    d: Direction,
     pub autopilot: bool
 }
 
@@ -23,57 +23,45 @@ impl Snake {
         }
     }
 
-    // Handles dir
-    fn dir(&self, mut dir: Direction) -> Direction {
-        // Head can't go backwards
-        if dir == Direction::Top && self.d == Direction::Bottom
-            || dir == Direction::Bottom && self.d == Direction::Top
-                || dir == Direction::Right && self.d == Direction::Left
-                || dir == Direction::Left && self.d == Direction::Right {
-                    dir = self.d.clone();
+    // Sets snake dir, if valid
+    // Returns new dir
+    pub fn dir(&mut self, dir: Direction) -> Direction {
+        if dir != self.d
+            && ![&dir, &self.d].iter().all(|&d| [Direction::Top, Direction::Bottom].contains(d)) 
+            && ![&dir, &self.d].iter().all(|&d| [Direction::Left, Direction::Right].contains(d)) {
+                    self.d = dir;
                 }
-        dir
+
+        self.d.clone()
     }
 
-    // Moves snake
-    pub fn mv(&mut self, dir: Direction) -> (i16, i16) {
-        self.body.pop();
-        self.d = self.dir(dir);
-        
-        // Insert to new pos
+    // Peeks and returns the next place snake head will be
+    pub fn peek(&self) -> (i16,i16) {
         let head = self.head();
-        self.body.insert(0, match self.d {
+
+        match self.d {
             Direction::Top => (head.0, head.1 - 1),
             Direction::Bottom => (head.0, head.1 + 1),
             Direction::Left => (head.0 - 1, head.1),
             Direction::Right => (head.0 + 1, head.1)
-        });
+        }
+    }
 
-        // Return new head pos
+    // Moves snake to direction
+    // Returns new head pos
+    pub fn mv(&mut self) -> (i16, i16) {
+        self.body.pop();
+        let peeked = self.peek();
+        self.body.insert(0, peeked);
+
         self.head()
     }
 
-    // Peeks a place this direction would end up the snake
-    pub fn peek(&self, dir: Direction) -> (i16,i16) {
-        // Head can't go backwards
-        let d = self.dir(dir);
-
-        let head = self.head();
-        match d {
-            Direction::Top => (head.0, head.1 - 1),
-            Direction::Bottom => (head.0, head.1 + 1),
-            Direction::Left => (head.0 - 1, head.1),
-            Direction::Right => (head.0 + 1, head.1)
-        }
-    }
-
-    // Forces new head location
-    pub fn goto(&mut self, pos: (i16,i16), dir: Option<Direction>) -> (i16,i16) {
+    // Moves head to a new location
+    // Returns new head pos
+    pub fn goto(&mut self, pos: (i16,i16)) -> (i16,i16) {
         self.body.pop();
         self.body.insert(0, pos);
-        if dir != None {
-            self.d = dir.unwrap();
-        }
         self.head()
     }
 
@@ -108,23 +96,35 @@ fn test_grow() {
 }
 
 #[test]
+fn test_dir() {
+    let mut snake = Snake::new();
+    assert!(snake.dir(Direction::Right) == Direction::Left);
+    assert!(snake.dir(Direction::Left) == Direction::Left);
+
+    snake.dir(Direction::Top);
+    snake.mv();
+    assert!(snake.dir(Direction::Bottom) == Direction::Top);
+    assert!(snake.dir(Direction::Top) == Direction::Top);
+}
+
+#[test]
 fn test_mv() {
     let mut snake = Snake::new();
-    let pos0 = snake.head();
+    snake.goto((0,0));
 
-    snake.mv(Direction::Top);
-    snake.mv(Direction::Left);
-    snake.mv(Direction::Bottom);
-    let pos1 = snake.mv(Direction::Top);
-
-    assert_eq!((pos0.0 - 1, pos0.1 + 1) , pos1);
+    snake.dir(Direction::Top);
+    assert_eq!((0, -1), snake.mv());
+    snake.dir(Direction::Left);
+    assert_eq!((-1, -1), snake.mv());
+    snake.dir(Direction::Bottom);
+    assert_eq!((-1, 0), snake.mv());
 }
 
 #[test]
 fn test_goto() {
     let mut snake = Snake::new();
     let pos0 = snake.head();
-    let pos1 = snake.goto((99,99), None);
+    let pos1 = snake.goto((99,99));
 
     assert_eq!((pos0.0 + 99, pos0.1 + 94) , pos1);
 }
@@ -132,9 +132,10 @@ fn test_goto() {
 #[test]
 fn test_goto_mv() {
     let mut snake = Snake::new();
-    snake.goto((99,99), None);
-    snake.mv(Direction::Bottom);
-    snake.mv(Direction::Bottom);
+    snake.goto((99,99));
+    snake.dir(Direction::Bottom);
+    snake.mv();
+    snake.mv();
 
     assert_eq!((99,100) , snake.body[1]);
 }
@@ -142,11 +143,13 @@ fn test_goto_mv() {
 #[test]
 fn test_peek() {
     let mut snake = Snake::new();
-    snake.goto((99,99), None);
-    snake.mv(Direction::Bottom);
-    snake.mv(Direction::Bottom);
+    snake.goto((99,99));
+    snake.dir(Direction::Bottom);
+    snake.mv();
+    snake.mv();
 
-    assert_eq!((100,101) , snake.peek(Direction::Right));
+    snake.dir(Direction::Right);
+    assert_eq!((100,101) , snake.peek());
     assert_eq!((99,101) , snake.head());
 }
 
