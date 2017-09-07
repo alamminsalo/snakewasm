@@ -31,8 +31,24 @@ impl Game {
         for snake in self.snakes.iter_mut() {
             let peeked = snake.peek();
             let translated = Game::translate(dim, peeked);
-            snake.goto(translated);
+
+            let pos = snake.goto(translated);
+
+            // Food grows snake
+            if self.food != None && pos == self.food.unwrap() {
+                snake.grow();
+
+                // Remove food
+                self.food = None;
+            }
         }
+
+        if self.food == None {
+            self.addFood();
+        }
+    }
+
+    fn addFood(&mut self) {
     }
 }
 
