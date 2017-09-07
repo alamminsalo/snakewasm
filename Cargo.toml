@@ -3,10 +3,7 @@ name = "snake"
 version = "0.1.0"
 authors = ["Antti Lamminsalo <antti.lamminsalo@gmail.com>"]
 
-[dependencies.cursive]
-version = "0.6"
-default-features = false
-features = ["termion-backend"]
-
 [dependencies]
+termion = "1.5.1"
+rand = "0.3"
 

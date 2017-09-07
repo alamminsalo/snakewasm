@@ -1,7 +1,11 @@
+extern crate termion;
+extern crate rand;
+use rand::Rng;
+
 use snake::{Snake, Direction};
 use util;
 
-struct Game {
+pub struct Game {
     w: u16,
     h: u16,
     pub snakes: Vec<Snake>,
@@ -32,10 +36,17 @@ impl Game {
             let peeked = snake.peek();
             let translated = Game::translate(dim, peeked);
 
-            let pos = snake.goto(translated);
+            // Clear snake tail
+            let tail = snake.tail();
+            print!("{} ", termion::cursor::Goto(tail.0 as u16, tail.1 as u16));
+
+            let head = snake.goto(translated);
+            let d1 = snake.d();
+
+            print!("{}{}", termion::cursor::Goto(head.0 as u16, head.1 as u16), util::snake_head(&d1));
 
             // Food grows snake
-            if self.food != None && pos == self.food.unwrap() {
+            if self.food != None && head == self.food.unwrap() {
                 snake.grow();
 
                 // Remove food
@@ -44,11 +55,28 @@ impl Game {
         }
 
         if self.food == None {
-            self.addFood();
+            self.add_food();
         }
     }
 
-    fn addFood(&mut self) {
+    fn grid(&self) -> Vec<(i16,i16)> {
+        let mut g = vec![];
+        for y in 0..self.h as i16 {
+            for x in 0..self.w as i16 {
+                g.push((x, y));
+            }
+        }
+        g
+    }
+
+    fn add_food(&mut self) {
+        let mut grid = self.grid();
+        for snake in self.snakes.iter() {
+            grid.retain(|x: &(i16,i16)| !snake.body.contains(x));
+        }
+
+        // Grid now contains only positions that are free
+        self.food = Some(*rand::thread_rng().choose(&grid).unwrap());
     }
 }
 

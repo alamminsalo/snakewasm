@@ -1,5 +1,8 @@
 // Snake object
 
+extern crate termion;
+use util;
+
 #[derive(Clone, PartialEq, Debug)]
 pub enum Direction {
     Top,
@@ -29,9 +32,18 @@ impl Snake {
         if dir != self.d
             && ![&dir, &self.d].iter().all(|&d| [Direction::Top, Direction::Bottom].contains(d)) 
             && ![&dir, &self.d].iter().all(|&d| [Direction::Left, Direction::Right].contains(d)) {
+
+                    // Fix dir change
+                    let h = self.head();
+                    print!("{}{}", termion::cursor::Goto(h.0 as u16, h.1 as u16), util::snake_angle(&self.d, &dir));
+
                     self.d = dir;
                 }
 
+        self.d.clone()
+    }
+
+    pub fn d(&self) -> Direction {
         self.d.clone()
     }
 
