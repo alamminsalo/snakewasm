@@ -20,7 +20,7 @@ pub struct Snake {
 impl Snake {
     pub fn new() -> Snake {
         Snake {
-            body: vec![(0,5),(1,5),(2,5),(3,5)],
+            body: vec![(5,5),(6,5),(7,5),(8,5)],
             d: Direction::Left,
             autopilot: false
         }
@@ -88,6 +88,12 @@ impl Snake {
     pub fn grow(&mut self) {
         let tail = self.tail();
         self.body.push(tail);
+    }
+
+    pub fn draw(&self) {
+        for p in &self.body {
+            print!("{}{}", termion::cursor::Goto(p.0 as u16,p.1 as u16),"*");
+        }
     }
 }
 
