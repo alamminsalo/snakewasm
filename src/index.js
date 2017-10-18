@@ -1,10 +1,12 @@
-const wasm = require('./rs/src/main.rs')
 
-var game
+import css from './css/normalize.css';
+import css from './css/skeleton.css';
+
+const wasm = require('./rs/src/main.rs');
 
 wasm.initialize({noExitRuntime: true}).then(module => {
   // Create a Javascript wrapper around our Rust function
-  game = {
+  window.game = {
 	height: module.cwrap('game_height', 'number', []),
   	width: module.cwrap('game_width', 'number', []),
 	tick: module.cwrap('tick', null, []),
@@ -33,6 +35,4 @@ wasm.initialize({noExitRuntime: true}).then(module => {
 		}
 	})()
   }
-
-  window.game = game
 })
