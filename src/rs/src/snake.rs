@@ -1,6 +1,5 @@
 // Snake object
 
-extern crate termion;
 use util;
 
 #[derive(Clone, PartialEq, Debug)]
@@ -11,6 +10,7 @@ pub enum Direction {
     Right
 }
 
+#[derive(PartialEq)]
 pub struct Snake {
     pub body: Vec<(i16,i16)>,
     d: Direction,
@@ -35,7 +35,6 @@ impl Snake {
 
                     // Fix dir change
                     let h = self.head();
-                    print!("{}{}", termion::cursor::Goto(h.0 as u16, h.1 as u16), util::snake_angle(&self.d, &dir));
 
                     self.d = dir;
                 }
@@ -88,12 +87,6 @@ impl Snake {
     pub fn grow(&mut self) {
         let tail = self.tail();
         self.body.push(tail);
-    }
-
-    pub fn draw(&self) {
-        for p in &self.body {
-            print!("{}{}", termion::cursor::Goto(p.0 as u16,p.1 as u16),"*");
-        }
     }
 }
 

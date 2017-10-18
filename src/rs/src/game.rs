@@ -1,10 +1,10 @@
-extern crate termion;
 extern crate rand;
-use rand::Rng;
+use rand::{Rng};
 
 use snake::{Snake, Direction};
 use util;
 
+#[derive(PartialEq)]
 pub struct Game {
     w: u16,
     h: u16,
@@ -36,26 +36,19 @@ impl Game {
             let peeked = snake.peek();
             let translated = Game::translate(dim, peeked);
 
-            // Clear snake tail
-            let tail = snake.tail();
-            print!("{} ", termion::cursor::Goto(tail.0 as u16, tail.1 as u16));
-
             let h0 = snake.head();
             let d0 = snake.d();
 
             let head = snake.goto(translated);
             let d1 = snake.d();
 
-            print!("{}{}", termion::cursor::Goto(h0.0 as u16, h0.1 as u16), util::snake_angle(&d0, &d1));
-            print!("{}{}", termion::cursor::Goto(head.0 as u16, head.1 as u16), util::snake_head(&d1));
-
             // Food grows snake
-//            if self.food != None && head == self.food.unwrap() {
-//                snake.grow();
-//
-//                // Remove food
-//                self.food = None;
-//            }
+            if self.food != None && head == self.food.unwrap() {
+                snake.grow();
+
+                // Remove food
+                self.food = None;
+            }
         }
 
 //        if self.food == None {
@@ -81,30 +74,6 @@ impl Game {
 
         // Grid now contains only positions that are free
         self.food = Some(*rand::thread_rng().choose(&grid).unwrap());
-    }
-
-    pub fn draw_borders(&self) {
-        // angles
-        print!("{}{}", termion::cursor::Goto(1,1), '┏');
-        print!("{}{}", termion::cursor::Goto(self.w,1), '┓');
-        print!("{}{}", termion::cursor::Goto(self.w,self.h), '┛');
-        print!("{}{}", termion::cursor::Goto(1,self.h),'┗');
-
-        for i in (2..self.w) {
-            print!("{}{}", termion::cursor::Goto(i,0),'━');
-            print!("{}{}", termion::cursor::Goto(i,self.h),'━');
-        }
-
-        for i in (2..self.h) {
-            print!("{}{}", termion::cursor::Goto(0,i),'┃');
-            print!("{}{}", termion::cursor::Goto(self.w,i),'┃');
-        }
-    }
-
-    pub fn draw(&self) {
-        for snake in &self.snakes {
-            snake.draw();
-        }
     }
 }
 

@@ -1,0 +1,6 @@
+{
+  "scripts": {
+    "compile": "webpack --progress",
+    "serve": "http-server"
+  }
+}
