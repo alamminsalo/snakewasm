@@ -10,6 +10,7 @@ mod util;
 
 use std::sync::Mutex;
 use self::game::Game;
+use self::snake::Direction;
 
 lazy_static! {
 	static ref GAME: Mutex<Game> = Mutex::new(Game::new(100,100));
@@ -42,6 +43,18 @@ pub fn snake_x_at(idx: usize) -> i16 {
 #[no_mangle]
 pub fn snake_y_at(idx: usize) -> i16 {
 	GAME.lock().unwrap().snakes[0].body[idx].1
+}
+
+#[no_mangle]
+pub fn snake_set_dir(dir: &str) {
+	
+        match dir.as_ref() {
+            "up" => 	{GAME.lock().unwrap().snakes[0].dir(Direction::Top);},
+            "down" => 	{GAME.lock().unwrap().snakes[0].dir(Direction::Bottom);},
+            "left" => 	{GAME.lock().unwrap().snakes[0].dir(Direction::Left);},
+            "right" => 	{GAME.lock().unwrap().snakes[0].dir(Direction::Right);},
+	    _ => {}
+        };
 }
 
 #[no_mangle]

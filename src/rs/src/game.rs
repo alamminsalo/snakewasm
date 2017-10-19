@@ -57,10 +57,9 @@ impl Game {
                 self.food = None;
             }
         }
-
-//        if self.food == None {
-//            self.add_food();
-//        }
+	if self.food == None {
+		self.add_food();
+	}
     }
 
     fn grid(&self) -> Vec<(i16,i16)> {
@@ -73,14 +72,18 @@ impl Game {
         g
     }
 
-    fn add_food(&mut self) {
+    fn free_grid(&self) ->Vec<(i16,i16)> {
         let mut grid = self.grid();
         for snake in self.snakes.iter() {
             grid.retain(|x: &(i16,i16)| !snake.body.contains(x));
         }
+	grid
+    }
 
+    fn add_food(&mut self) {
+    	let grid = self.free_grid();
         // Grid now contains only positions that are free
-        self.food = Some(*rand::thread_rng().choose(&grid).unwrap());
+        self.food = Some(rand::thread_rng().choose(&grid).unwrap().clone());
     }
 }
 
@@ -113,4 +116,28 @@ fn test_tick() {
     }
 }
 
+#[test]
+fn test_grid() {
+	let mut game = Game::new(10,10);
+    {
+        let snake = game.snakes.get_mut(0).unwrap();
+        snake.goto((0,0));
+        snake.dir(Direction::Left);
+    }
+
+    game.tick();
+    game.tick();
+
+	let grid = game.grid();
+    let free = game.free_grid();
+    assert!(free.len() < game.grid().len());
+
+    {
+        let snake = game.snakes.get_mut(0).unwrap();
+	assert!(free.len() + snake.body.len() == grid.len());
+	for part in &snake.body {
+		assert!(!free.contains(&part));
+	}
+    }
+}
 
