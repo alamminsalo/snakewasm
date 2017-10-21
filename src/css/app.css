@@ -1,0 +1,27 @@
+
+#game-grid {
+  display: grid;
+  grid-template-columns: repeat(18, auto);
+}
+
+.tile {
+  background-color: #aaa;
+  border-radius: 1rem;
+}
+
+.fill-height {
+  height: 99vh;
+}
+
+.flex {
+  display: flex;
+}
+
+.align-items-center {
+  align-items: center;
+}
+
+.text-center {
+  text-align: center;
+}
+

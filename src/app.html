@@ -1,20 +1,27 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
-		<title><%= htmlWebpackPlugin.options.title %></title>
-	</head>
-	<body>
-		<div class="container">
-			<div class="row">
-				<h2>wasm snake game</h2>
-			</div>
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+<title><%= htmlWebpackPlugin.options.title %></title>
+</head>
+<body>
+<div class="fill-height flex align-items-center">
+    <div class="container">
+	<!-- Page content -->
+	<div id="app">
 
-			<!-- Page content -->
-			<div class="row">
-				<button>Play</button>
-				<div id="game"></div>
-			</div>
-		</div>
-	</body>
+	    <!-- Start view -->
+	    <div v-if="!running">
+		<label class="text-center">A game of snake?</label>
+		<button class="six columns offset-by-three" v-on:click="start">Let's play snake!</button>
+	    </div>
+
+	    <!-- Game view -->
+	    <div id="game-grid" v-if="running">
+		<div class="tile" v-for="x in height * width"></div>
+	    </div>
+	</div>
+    </div>
+</div>
+</body>
 </html>
