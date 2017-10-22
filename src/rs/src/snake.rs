@@ -12,18 +12,25 @@ pub enum Direction {
 
 #[derive(PartialEq)]
 pub struct Snake {
-    pub body: Vec<(i16,i16)>,
-    pub d: Direction,
-    d_next: Option<Direction>,
-    pub autopilot: bool
+    body: Vec<(i16,i16)>,
+    d: Direction,
+    d_next: Option<Direction>
 }
 
 impl Snake {
+
+    pub fn direction(&self) -> Direction {
+      self.d.clone()
+    }
+
+    pub fn body(&self) -> &Vec<(i16,i16)> {
+      &self.body
+    }
+
     pub fn new() -> Snake {
         Snake {
             body: vec![(5,5),(6,5),(7,5),(8,5)],
             d: Direction::Left,
-            autopilot: false,
 	    d_next: None
         }
     }
@@ -37,7 +44,7 @@ impl Snake {
                     self.d_next = Some(dir);
                 }
 
-        self.d.clone()
+        self.direction().clone()
     }
 
     pub fn d(&self) -> Direction {
@@ -98,7 +105,8 @@ impl Snake {
     }
 }
 
-/**======== TESTS BEGIN ==========**/
+#[cfg(test)]
+mod tests {
 #[test]
 fn test_grow() {
     let mut snake = Snake::new();
@@ -170,5 +178,6 @@ fn test_peek() {
     snake.dir(Direction::Right);
     assert_eq!((100,101) , snake.peek());
     assert_eq!((99,101) , snake.head());
+}
 }
 

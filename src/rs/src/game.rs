@@ -6,14 +6,34 @@ use util;
 
 #[derive(PartialEq)]
 pub struct Game {
-    pub w: u16,
-    pub h: u16,
-    pub snakes: Vec<Snake>,
-    pub food: Option<(i16,i16)>,
-    pub ended: bool
+    w: u16,
+    h: u16,
+    snakes: Vec<Snake>,
+    food: Option<(i16,i16)>,
+    ended: bool
 }
 
 impl Game {
+
+    pub fn width(&self) -> u16 {
+      self.w
+    }
+
+    pub fn height(&self) -> u16 {
+      self.h
+    }
+
+    pub fn get_snake(&mut self) -> &mut Snake {
+      &mut self.snakes[0]
+    }
+
+    pub fn get_food(&self) -> &Option<(i16,i16)> {
+      &self.food
+    }
+
+    pub fn is_ended(&self) -> bool {
+      self.ended
+    }
 
     // Creates a new game
     pub fn new(width: u16, height: u16) -> Game {
@@ -54,7 +74,7 @@ impl Game {
 	      let d1 = snake.d();
 
 	      // Hitting self kills the snake
-	      if snake.body[1..].contains(&peeked) {
+	      if snake.body()[1..].contains(&peeked) {
 		self.ended = true;
 	      }
 
@@ -85,7 +105,7 @@ impl Game {
     fn free_grid(&self) ->Vec<(i16,i16)> {
         let mut grid = self.grid();
         for snake in self.snakes.iter() {
-            grid.retain(|x: &(i16,i16)| !snake.body.contains(x));
+            grid.retain(|x: &(i16,i16)| !snake.body().contains(x));
         }
 	grid
     }
@@ -97,6 +117,8 @@ impl Game {
     }
 }
 
+#[cfg(test)]
+mod tests {
 #[test]
 fn test_tick() {
     let mut game = Game::new(32, 32);
@@ -144,10 +166,10 @@ fn test_grid() {
 
     {
         let snake = game.snakes.get_mut(0).unwrap();
-	assert!(free.len() + snake.body.len() == grid.len());
-	for part in &snake.body {
+	assert!(free.len() + snake.body().len() == grid.len());
+	for part in &snake.body() {
 		assert!(!free.contains(&part));
 	}
     }
 }
-
+}
