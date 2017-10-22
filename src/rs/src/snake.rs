@@ -14,6 +14,7 @@ pub enum Direction {
 pub struct Snake {
     pub body: Vec<(i16,i16)>,
     pub d: Direction,
+    d_next: Option<Direction>,
     pub autopilot: bool
 }
 
@@ -22,21 +23,18 @@ impl Snake {
         Snake {
             body: vec![(5,5),(6,5),(7,5),(8,5)],
             d: Direction::Left,
-            autopilot: false
+            autopilot: false,
+	    d_next: None
         }
     }
 
     // Sets snake dir, if valid
     // Returns new dir
     pub fn dir(&mut self, dir: Direction) -> Direction {
-        if dir != self.d
+	  if dir != self.d
             && ![&dir, &self.d].iter().all(|&d| [Direction::Top, Direction::Bottom].contains(d)) 
             && ![&dir, &self.d].iter().all(|&d| [Direction::Left, Direction::Right].contains(d)) {
-
-                    // Fix dir change
-                    let h = self.head();
-
-                    self.d = dir;
+                    self.d_next = Some(dir);
                 }
 
         self.d.clone()
@@ -61,6 +59,12 @@ impl Snake {
     // Moves snake to direction
     // Returns new head pos
     pub fn mv(&mut self) -> (i16, i16) {
+	
+	if self.d_next != None {
+	  self.d = self.d_next.clone().unwrap();
+	  self.d_next = None;
+	}
+
         self.body.pop();
         let peeked = self.peek();
         self.body.insert(0, peeked);
@@ -71,6 +75,10 @@ impl Snake {
     // Moves head to a new location
     // Returns new head pos
     pub fn goto(&mut self, pos: (i16,i16)) -> (i16,i16) {
+	if self.d_next != None {
+	  self.d = self.d_next.clone().unwrap();
+	  self.d_next = None;
+	}
         self.body.pop();
         self.body.insert(0, pos);
         self.head()

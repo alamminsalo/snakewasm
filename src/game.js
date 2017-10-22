@@ -8,6 +8,7 @@ var Game = {
       width: module.cwrap('game_width', 'number', []),
       tick: module.cwrap('tick', null, []),
       reset: module.cwrap('reset', null, []),
+      isEnded: module.cwrap('is_ended', 'boolean', []),
 
       snake: {
         up: module.cwrap('snake_up', null, []),
@@ -21,14 +22,12 @@ var Game = {
           const xat = module.cwrap('snake_x_at', 'number', ['number']);
           const yat = module.cwrap('snake_y_at', 'number', ['number']);
           return function() {
-            let mapX = {};
-            let mapY = {};
+            let arr = []; 
             let snake_len = len();
             for (var i = 0; i < snake_len; i++) {
-              mapX[xat(i)] = true;
-              mapY[yat(i)] = true;
+              arr.push({x: xat(i), y: yat(i) });
             }
-            return {x: mapX, y: mapY};
+            return arr;
           }
         })()
       },

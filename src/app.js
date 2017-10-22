@@ -7,9 +7,9 @@ let app = new Vue({
 
   data: {
     snake: { x: {}, y: {}},
-    food: [],
-    height: 24,
-    width: 24,
+    food: {},
+    height: 16,
+    width: 16,
     running: false
   },
 
@@ -23,9 +23,14 @@ let app = new Vue({
     left: () => {},
     right: () => {},
 
+    isSnake: (x,y) => _.some(app.snake, {'x': x, 'y': y}),
+    isFood: (x,y) => app.food.x == x && app.food.y == y,
+
     start: () => {
       Game.initialize().then((_game_) => {
         const game = _game_;
+
+        window.GAME = game;
 
         app.up = () => game.snake.up();
         app.down = () => game.snake.down();
@@ -48,9 +53,11 @@ let app = new Vue({
         app.tick = () => {
           game.tick();
 
+          if (game.isEnded())
+            game.reset(app.width, app.height);
+
           // Refresh snake
           app.snake = game.snake.body();
-
 
           // Refresh food
           app.food = game.food();

@@ -21,6 +21,11 @@ fn main() {
 }
 
 #[no_mangle]
+pub fn is_ended() -> bool {
+  GAME.lock().unwrap().ended
+}
+
+#[no_mangle]
 pub fn tick() {
   GAME.lock().unwrap().tick();
 }

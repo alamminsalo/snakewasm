@@ -9,7 +9,8 @@ pub struct Game {
     pub w: u16,
     pub h: u16,
     pub snakes: Vec<Snake>,
-    pub food: Option<(i16,i16)>
+    pub food: Option<(i16,i16)>,
+    pub ended: bool
 }
 
 impl Game {
@@ -20,13 +21,14 @@ impl Game {
             w: width,
             h: height,
             snakes: vec![Snake::new()],
-            food: None
+            food: None,
+	    ended: false
         }
     }
 
     // Handle border-crossing and translates coordinates when needed
     fn translate(dim: (u16, u16), pos: (i16,i16)) -> (i16,i16) {
-        (util::wrap(1, pos.0, dim.0 as i16), util::wrap(1, pos.1, dim.1 as i16))
+        (util::wrap(0, pos.0, dim.0 as i16 - 1), util::wrap(0, pos.1, dim.1 as i16 - 1))
     }
 
     pub fn reset(&mut self, w: u16, h: u16) {
@@ -34,31 +36,39 @@ impl Game {
 	self.h = h;
         self.snakes = vec![Snake::new()];
 	self.food = None;
+	self.ended = false;
     }
 
     // Ticks game state
     pub fn tick(&mut self) {
-        let dim = (self.w, self.h);
-        for snake in self.snakes.iter_mut() {
-            let peeked = snake.peek();
-            let translated = Game::translate(dim, peeked);
+	if !self.ended {
+	  let dim = (self.w, self.h);
+	  for snake in self.snakes.iter_mut() {
+	      let peeked = snake.peek();
+	      let translated = Game::translate(dim, peeked);
 
-            let h0 = snake.head();
-            let d0 = snake.d();
+	      let h0 = snake.head();
+	      let d0 = snake.d();
 
-            let head = snake.goto(translated);
-            let d1 = snake.d();
+	      let head = snake.goto(translated);
+	      let d1 = snake.d();
 
-            // Food grows snake
-            if self.food != None && head == self.food.unwrap() {
-                snake.grow();
+	      // Hitting self kills the snake
+	      if snake.body[1..].contains(&peeked) {
+		self.ended = true;
+	      }
 
-                // Remove food
-                self.food = None;
-            }
-        }
-	if self.food == None {
-		self.add_food();
+	      // Food grows snake
+	      if self.food != None && head == self.food.unwrap() {
+		  snake.grow();
+
+		  // Remove food
+		  self.food = None;
+	      }
+	  }
+	  if self.food == None {
+		  self.add_food();
+	  }
 	}
     }
 

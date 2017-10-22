@@ -16,8 +16,8 @@
 
 .grid-item {
   border-radius: 50%;
-  height: 60%;
-  width: 60%;
+  height: 55%;
+  width: 55%;
   background-color: #eee;
   transition: all 0.2s ease-out;
 }
