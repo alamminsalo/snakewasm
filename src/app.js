@@ -39,13 +39,13 @@ let app = new Vue({
 
         // Setup keyEvents
         window.addEventListener('keydown', (e) => {
-          if (e.keyCode == 37)
+          if (e.keyCode == 37 || e.keyCode == 65) // left / a
             app.left();
-          if (e.keyCode == 38)
+          if (e.keyCode == 38 || e.keyCode == 87) // up / w
             app.up();
-          if (e.keyCode == 39)
+          if (e.keyCode == 39 || e.keyCode == 68) // right / d
             app.right();
-          if (e.keyCode == 40)
+          if (e.keyCode == 40 || e.keyCode == 83) // down / s
             app.down();
         });
 
