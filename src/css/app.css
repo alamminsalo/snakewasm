@@ -16,10 +16,10 @@
 
 .grid-item {
   border-radius: 50%;
-  height: 55%;
-  width: 55%;
+  height: 50%;
+  width: 50%;
   background-color: #eee;
-  transition: all 0.2s ease-out;
+  transition: all 0.1s;
 }
 
 .snake {
@@ -31,8 +31,8 @@
 
 .food {
   border-radius: 10%;
-  height: 50%;
-  width: 50%;
+  height: 55%;
+  width: 55%;
   background-color: #f15;
 }
 
