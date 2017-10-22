@@ -1,12 +1,39 @@
 
-#game-grid {
-  display: grid;
-  grid-template-columns: repeat(18, auto);
+.flex-column {
+  display: flex;
+  flex-direction: column;
 }
 
-.tile {
-  background-color: #aaa;
-  border-radius: 1rem;
+.grow {
+  flex: 1;
+}
+
+.grid-cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.grid-item {
+  border-radius: 50%;
+  height: 60%;
+  width: 60%;
+  background-color: #eee;
+  transition: all 0.2s ease-out;
+}
+
+.snake {
+  border-radius: 10%;
+  height: 75%;
+  width: 75%;
+  background-color: #1e8;
+}
+
+.food {
+  border-radius: 10%;
+  height: 50%;
+  width: 50%;
+  background-color: #f15;
 }
 
 .fill-height {

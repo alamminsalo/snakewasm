@@ -1,27 +1,33 @@
 <!DOCTYPE html>
 <html>
-<head>
-<meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
-<title><%= htmlWebpackPlugin.options.title %></title>
-</head>
-<body>
-<div class="fill-height flex align-items-center">
-    <div class="container">
-	<!-- Page content -->
-	<div id="app">
+    <head>
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+	<title><%= htmlWebpackPlugin.options.title %></title>
+    </head>
+    <body>
+	<div class="fill-height flex align-items-center">
+	    <div class="container">
+		<!-- Page content -->
+		<div id="app"
+		    @keydown.up="up">
 
-	    <!-- Start view -->
-	    <div v-if="!running">
-		<label class="text-center">A game of snake?</label>
-		<button class="six columns offset-by-three" v-on:click="start">Let's play snake!</button>
-	    </div>
+		    <!-- Start view -->
+		    <div v-if="!running">
+			<label class="text-center">A game of snake?</label>
+			<button class="six columns offset-by-three" v-on:click="start">Let's play snake!</button>
+		    </div>
 
-	    <!-- Game view -->
-	    <div id="game-grid" v-if="running">
-		<div class="tile" v-for="x in height * width"></div>
+		    <!-- Game view -->
+		    <div v-if="running" class="flex-column" v-bind:style="{'height': areaHeight}">
+			<div class="grow flex" v-for="y in height">
+			    <div class="grow grid-cell" v-for="x in width">
+				<div class="grid-item" v-bind:class="{ snake: snake.x[x] && snake.y[y], food: food.x === x && food.y === y}">
+				</div>
+			    </div>
+			</div>
+		    </div>
+		</div>
 	    </div>
 	</div>
-    </div>
-</div>
-</body>
+    </body>
 </html>

@@ -10,19 +10,25 @@ var Game = {
       reset: module.cwrap('reset', null, []),
 
       snake: {
-        mv:  module.cwrap('snake_set_dir', null, ['string']),
+        up: module.cwrap('snake_up', null, []),
+        down: module.cwrap('snake_down', null, []),
+        left: module.cwrap('snake_left', null, []),
+        right: module.cwrap('snake_right', null, []),
+
         // Returns snake as [{x,y}]
         body: (function() {
-          const len = module.cwrap('snake_len', 'number', [])
-          const xat = module.cwrap('snake_x_at', 'number', ['number'])
-          const yat = module.cwrap('snake_y_at', 'number', ['number'])
+          const len = module.cwrap('snake_len', 'number', []);
+          const xat = module.cwrap('snake_x_at', 'number', ['number']);
+          const yat = module.cwrap('snake_y_at', 'number', ['number']);
           return function() {
-            let arr = []
+            let mapX = {};
+            let mapY = {};
             let snake_len = len();
             for (var i = 0; i < snake_len; i++) {
-              arr.push({x: xat(i), y: yat(i)})
+              mapX[xat(i)] = true;
+              mapY[yat(i)] = true;
             }
-            return arr
+            return {x: mapX, y: mapY};
           }
         })()
       },
@@ -31,7 +37,10 @@ var Game = {
         const fx = module.cwrap('food_x', 'number', [])
         const fy = module.cwrap('food_y', 'number', [])
         return function() {
-          return {x: fx(), y: fy()}
+          return { 
+            x: fx(), 
+            y: fy() 
+          };
         }
       })()
     };

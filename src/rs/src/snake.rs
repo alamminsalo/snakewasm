@@ -13,7 +13,7 @@ pub enum Direction {
 #[derive(PartialEq)]
 pub struct Snake {
     pub body: Vec<(i16,i16)>,
-    d: Direction,
+    pub d: Direction,
     pub autopilot: bool
 }
 

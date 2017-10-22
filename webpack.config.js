@@ -26,7 +26,7 @@ module.exports = {
   },
   plugins: [
 	  new HtmlWebpackPlugin({
-		  title: 'WebAssembly Snake',
+		  title: 'Snake wasm',
 		  template: 'src/app.html'
 	  })
   ],

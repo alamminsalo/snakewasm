@@ -26,7 +26,7 @@ impl Game {
 
     // Handle border-crossing and translates coordinates when needed
     fn translate(dim: (u16, u16), pos: (i16,i16)) -> (i16,i16) {
-        (util::wrap(2, pos.0, dim.0 as i16 - 1), util::wrap(2, pos.1, dim.1 as i16 - 1))
+        (util::wrap(1, pos.0, dim.0 as i16), util::wrap(1, pos.1, dim.1 as i16))
     }
 
     pub fn reset(&mut self, w: u16, h: u16) {
