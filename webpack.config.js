@@ -26,7 +26,7 @@ module.exports = {
   },
   plugins: [
 	  new HtmlWebpackPlugin({
-		  title: 'Snake wasm',
+		  title: 'Snake Game',
 		  template: 'src/app.html'
 	  })
   ],
