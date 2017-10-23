@@ -48,6 +48,17 @@
   align-items: center;
 }
 
+.rotate-45 {
+  -ms-transform: rotate(45deg);
+  -moz-transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+.justify-content-center {
+  justify-content: center;
+}
+
 .justify-content-end {
   justify-content: flex-end;
 }
@@ -88,9 +99,9 @@
   border-radius: 50%;
   height: 4em;
   width: 4em;
-  position: relative;
   background-color: #ddd;
-  margin: 0.4em;
+  margin: 1em;
+  margin-top: 0;
 }
 
 .btn:hover {

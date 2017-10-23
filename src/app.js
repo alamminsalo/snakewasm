@@ -50,16 +50,12 @@ let app = new Vue({
         });
 
         // Mobile btn listeners
-        document.getElementById('up-btn').addEventListener('mousedown', (e) => {
-          app.up();
-        });
-        document.getElementById('down-btn').addEventListener('mousedown', (e) => {
-          app.down();
-        });
         document.getElementById('left-btn').addEventListener('mousedown', (e) => {
+          app.up();
           app.left();
         });
         document.getElementById('right-btn').addEventListener('mousedown', (e) => {
+          app.down();
           app.right();
         });
 
