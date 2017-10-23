@@ -49,6 +49,20 @@ let app = new Vue({
             app.down();
         });
 
+        // Mobile btn listeners
+        document.getElementById('up-btn').addEventListener('mousedown', (e) => {
+          app.up();
+        });
+        document.getElementById('down-btn').addEventListener('mousedown', (e) => {
+          app.down();
+        });
+        document.getElementById('left-btn').addEventListener('mousedown', (e) => {
+          app.left();
+        });
+        document.getElementById('right-btn').addEventListener('mousedown', (e) => {
+          app.right();
+        });
+
         // Setup ticker function
         app.tick = () => {
           game.tick();

@@ -48,7 +48,52 @@
   align-items: center;
 }
 
+.justify-content-end {
+  justify-content: flex-end;
+}
+
+.align-items-end  {
+  align-items: flex-end;
+}
+
 .text-center {
   text-align: center;
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+@media (min-width: 750px) {
+  .mobile {
+    display: none;
+  }
+}
+
+.fa {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.fa:before {
+  font-family: FontAwesome;
+}
+
+.btn {
+  border-radius: 50%;
+  height: 4em;
+  width: 4em;
+  position: relative;
+  background-color: #ddd;
+  margin: 0.4em;
+}
+
+.btn:hover {
+  background-color: #aaa;
 }
 
