@@ -51,11 +51,11 @@ let app = new Vue({
 
         // Mobile btn listeners
         document.getElementById('left-btn').addEventListener('mousedown', (e) => {
-          app.up();
+          app.down();
           app.left();
         });
         document.getElementById('right-btn').addEventListener('mousedown', (e) => {
-          app.down();
+          app.up();
           app.right();
         });
 
