@@ -21,4 +21,5 @@ To serve locally, run ```npm run serve``` and open up web-browser on localhost:8
 * UI was made using vue.js but any framework will do (or even without)
 * The rust code wrapper is inside ```game.js``` and rust functions it uses are visible in ```main.rs```. 
 Made using instructions on [emscripten documentations](https://kripken.github.io/emscripten-site/docs/porting/connecting_cpp_and_javascript/Interacting-with-code.html)
+* To me, a helpful tutorial to get started was [this article](https://medium.com/@ianjsikes/get-started-with-rust-webassembly-and-webpack-58d28e219635)
 
