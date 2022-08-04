@@ -1,57 +1,58 @@
 <!DOCTYPE html>
 <html>
-    <head>
-	<meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+		<head>
+				<meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+				<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+				<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 
-	<title><%= htmlWebpackPlugin.options.title %></title>
-    </head>
-    <body>
-	<div class="fill-height flex align-items-center">
-	    <div class="container">
-		<!-- Page content -->
-		<div id="app" class="eight columns offset-by-two">
+				<title>Snake WASM</title>
+				<script type="module" src="index.js"></script>
+		</head>
+		<body>
+				<div class="fill-height flex align-items-center">
+						<div class="container">
+								<!-- Page content -->
+								<div id="app" class="eight columns offset-by-two">
 
-		    <!-- Start view -->
-		    <div v-if="!running">
-			<label class="text-center">Play snake?</label>
-			<button class="six columns offset-by-three" v-on:click="start">Let's play snake!</button>
-		    </div>
+										<!-- Start view -->
+										<div v-if="!running">
+												<label class="text-center">Play snake?</label>
+												<button class="six columns offset-by-three" v-on:click="start">Let's play snake!</button>
+										</div>
 
-		    <!-- Game view -->
-		    <div v-if="running" class="flex-column" v-bind:style="{'height': areaHeight}">
-			<div class="grow flex" v-for="(valY, y) in height">
-			    <div class="grow grid-cell" v-for="(valX, x) in width">
-				<div class="grid-item" v-bind:class="{ snake: isSnake(x,y), food: isFood(x,y)}">
+										<!-- Game view -->
+										<div v-if="running" class="flex-column" v-bind:style="{'height': areaHeight}">
+												<div class="grow flex" v-for="(valY, y) in height">
+														<div class="grow grid-cell" v-for="(valX, x) in width">
+																<div class="grid-item" v-bind:class="{ snake: isSnake(x,y), food: isFood(x,y)}">
+																</div>
+														</div>
+												</div>
+
+										</div>
+
+										<!-- Mobile buttons -->
+										<div v-show="running" class="mobile footer flex">
+												<div id="left-btn" class="btn fa fa-arrow-left rotate-neg-45"></div>
+												<div class="grow"></div>
+
+												<div id="right-btn" class="btn fa fa-arrow-right rotate-neg-45"></div>
+										</div>
+								</div>
+
+								<!-- Info -->
+								<div class="ten columns offset-by-one text-center">
+										<small>
+												Project on <a href="https://github.com/alamminsalo/snakewasm">Github</a>
+												|
+												Powered by 
+												<a href="https://vuejs.org">Vue.js</a> and
+												<a href="https://www.rust-lang.org">Rust</a>
+										</small>
+										<br/>
+										<small>
+								</div>
+						</div>
 				</div>
-			    </div>
-			</div>
-
-		    </div>
-
-		    <!-- Mobile buttons -->
-		    <div v-show="running" class="mobile footer flex">
-			    <div id="left-btn" class="btn fa fa-arrow-left rotate-neg-45"></div>
-			    <div class="grow"></div>
-
-			    <div id="right-btn" class="btn fa fa-arrow-right rotate-neg-45"></div>
-		    </div>
-		</div>
-
-		<!-- Info -->
-		<div class="ten columns offset-by-one text-center">
-		    <small>
-			Project on <a href="https://github.com/alamminsalo/snakewasm">Github</a>
-			|
-			Powered by 
-			<a href="https://vuejs.org">Vue.js</a> and
-			<a href="https://www.rust-lang.org">Rust</a>
-		    </small>
-		    <br/>
-		    <small>
-		</div>
-	    </div>
-	</div>
-    </body>
+		</body>
 </html>
