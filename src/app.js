@@ -1,20 +1,19 @@
 import Vue from 'vue/dist/vue.js';
 import Game from './game.js';
-import _ from 'lodash';
 
 let app = new Vue({
   el: '#app',
 
   data: {
-    snake: { x: {}, y: {}},
+    snake: { x: {}, y: {} },
     food: {},
     height: 16,
     width: 16,
-    running: false
+    running: false,
   },
 
   computed: {
-    areaHeight: () => app.$el.clientWidth + 'px'
+    areaHeight: () => app.$el.clientWidth + 'px',
   },
 
   methods: {
@@ -23,8 +22,8 @@ let app = new Vue({
     left: () => {},
     right: () => {},
 
-    isSnake: (x,y) => _.some(app.snake, {'x': x, 'y': y}),
-    isFood: (x,y) => app.food.x == x && app.food.y == y,
+    isSnake: (x, y) => app.snake.some((el) => el.x == x && el.y == y),
+    isFood: (x, y) => app.food.x == x && app.food.y == y,
 
     start: () => {
       Game.initialize().then((_game_) => {
@@ -39,32 +38,39 @@ let app = new Vue({
 
         // Setup keyEvents
         window.addEventListener('keydown', (e) => {
-          if (e.keyCode == 37 || e.keyCode == 65) // left / a
+          if (e.keyCode == 37 || e.keyCode == 65)
+            // left / a
             app.left();
-          if (e.keyCode == 38 || e.keyCode == 87) // up / w
+          if (e.keyCode == 38 || e.keyCode == 87)
+            // up / w
             app.up();
-          if (e.keyCode == 39 || e.keyCode == 68) // right / d
+          if (e.keyCode == 39 || e.keyCode == 68)
+            // right / d
             app.right();
-          if (e.keyCode == 40 || e.keyCode == 83) // down / s
+          if (e.keyCode == 40 || e.keyCode == 83)
+            // down / s
             app.down();
         });
 
         // Mobile btn listeners
-        document.getElementById('left-btn').addEventListener('mousedown', (e) => {
-          app.down();
-          app.left();
-        });
-        document.getElementById('right-btn').addEventListener('mousedown', (e) => {
-          app.up();
-          app.right();
-        });
+        document
+          .getElementById('left-btn')
+          .addEventListener('mousedown', (e) => {
+            app.down();
+            app.left();
+          });
+        document
+          .getElementById('right-btn')
+          .addEventListener('mousedown', (e) => {
+            app.up();
+            app.right();
+          });
 
         // Setup ticker function
         app.tick = () => {
           game.tick();
 
-          if (game.isEnded())
-            game.reset(app.width, app.height);
+          if (game.isEnded()) game.reset(app.width, app.height);
 
           // Refresh snake
           app.snake = game.snake.body();
@@ -87,11 +93,9 @@ let app = new Vue({
         // Focus hidden input field to receive key events
         app.$el.focus();
 
-
         // First tick
         app.tick();
       });
-    }
-  }
-})
-
+    },
+  },
+});
