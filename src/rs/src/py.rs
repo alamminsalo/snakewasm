@@ -6,6 +6,11 @@ fn state() -> PyResult<Vec<Vec<i8>>> {
     Ok(crate::state())
 }
 
+#[pyfunction]
+fn state_model() -> PyResult<Vec<Vec<f32>>> {
+    Ok(crate::state_model())
+}
+
 /// Formats the sum of two numbers as string.
 #[pyfunction]
 fn reset(w: usize, h: usize) {
@@ -81,6 +86,7 @@ fn snake_body() -> PyResult<Vec<(i16, i16)>> {
 fn snake(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(reset, m)?)?;
     m.add_function(wrap_pyfunction!(state, m)?)?;
+    m.add_function(wrap_pyfunction!(state_model, m)?)?;
     m.add_function(wrap_pyfunction!(tick, m)?)?;
     m.add_function(wrap_pyfunction!(score, m)?)?;
     m.add_function(wrap_pyfunction!(input, m)?)?;

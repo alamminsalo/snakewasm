@@ -1,4 +1,6 @@
 extern crate rand;
+use ndarray::{Array2, ArrayBase};
+use serde::{Deserialize, Serialize};
 use wasm_bindgen::prelude::*;
 
 #[macro_use]
@@ -152,9 +154,51 @@ pub fn state() -> Vec<Vec<i8>> {
     state
 }
 
+// Returns compatible state for neural network input
+pub fn state_model() -> Vec<Vec<f32>> {
+    let mut game = GAME.lock().unwrap();
+    let width = game.width() as usize;
+    let height = game.height() as usize;
+
+    let body_all = game.get_snake().body().clone();
+    let head = &body_all[..1][0].clone();
+    let body = &body_all[1..];
+
+    // get food distance matrix, rolled to food position
+    let food = game.get_food().unwrap();
+    let center = (width as i16 / 2, height as i16 / 2);
+    let mut m_state = util::roll_2d(util::dist_2d(width, height), util::dist_coord(food, center));
+
+    // add body weight matrix, replacing cell values with body weights (negative)
+    m_state = util::add_weight_matrix(m_state, body);
+
+    // center matrix to head
+    m_state = util::roll_2d(m_state, util::dist_coord(center, *head));
+
+    // set head position to 0
+    *m_state
+        .get_mut((center.0 as usize, center.1 as usize))
+        .unwrap() = 0.0;
+
+    // rotate array to face always into current direction of the snake (upwards)
+    m_state = util::rot90(m_state, 4 - game.snake_dir() as usize);
+
+    let mut result = vec![];
+    for row in m_state.rows() {
+        result.push(row.to_vec());
+    }
+
+    result
+}
+
 #[wasm_bindgen]
-pub fn state_json() -> String {
-    serde_json::to_string(&state()).unwrap()
+pub fn state_js() -> JsValue {
+    JsValue::from_serde(&state()).unwrap()
+}
+
+#[wasm_bindgen]
+pub fn state_model_js() -> JsValue {
+    JsValue::from_serde(&state_model()).unwrap()
 }
 
 #[cfg(test)]

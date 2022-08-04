@@ -9,13 +9,15 @@ name = "snake"
 crate-type = ["cdylib"]
 
 [dependencies]
+serde = { version = "1.0", features = ["derive"] }
+wasm-bindgen = { version = "0.2", features = ["serde-serialize"] }
 rand = {version="0.8", default-features = false, features = ["std_rng", "std"]}
 getrandom = {version="0.2", features=["js"]}
 lazy_static = "1.4"
 serde_json = "1.0"
-wasm-bindgen = "0.2"
 pyo3 = { version = "0.16.4", features = ["extension-module"], optional = true }
 wee_alloc = {version="0.4.5", optional=true}
+ndarray = "0.15.6"
 
 [features]
 default = ["wee_alloc"]
