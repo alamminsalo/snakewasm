@@ -36,6 +36,7 @@ initialize().then((game) => {
     data: {
       state: [],
       running: false,
+      enable_ai: false,
     },
 
     computed: {
@@ -44,6 +45,8 @@ initialize().then((game) => {
 
     methods: {
       start: (enable_ai) => {
+        app.enable_ai = enable_ai;
+
         if (!enable_ai) {
           setup_listeners(game);
         }
