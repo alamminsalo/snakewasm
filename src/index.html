@@ -11,9 +11,9 @@
 				<div class="fill-height flex align-items-center">
 						<div class="container">
 								<!-- Page content -->
-								<div id="app" class="eight columns offset-by-two container">
+								<div id="app" class="ten columns offset-by-one">
 										<div v-if="!running" class="row">
-												<p class="text-center">Select player</p>
+												<pre class="text-center">Select player</pre>
 										</div>
 
 										<!-- Start view -->
@@ -24,7 +24,7 @@
 
 										<!-- legend -->
 										<div v-show="!running" class="twelve columns text-center">
-												<pre>Press &lt;<b>Space</b>&gt; to pause. Click anywhere to drop food.</pre>
+												<small><pre>Press &lt;<b>Space</b>&gt; to pause. Click anywhere to drop food.</pre></small>
 										</div>
 
 										<!-- Game view -->
@@ -54,14 +54,7 @@
 
 								<!-- Info -->
 								<div class="ten columns offset-by-one text-center">
-										<small>
-												<a href="https://github.com/alamminsalo/snakewasm">Github</a>
-												| Made using
-												<a href="https://vuejs.org">Vue.js</a>,
-												<a href="https://rust-lang.org">Rust</a>,
-												<a href="https://pytorch.org/">PyTorch</a> and
-												<a href="https://onnx.ai">ONNX</a>
-										</small>
+										<small><pre><a href="https://github.com/alamminsalo/snakewasm">Github</a> | Made using <a href="https://vuejs.org">Vue.js</a>, <a href="https://rust-lang.org">Rust</a>, <a href="https://pytorch.org/">PyTorch</a> and <a href="https://onnx.ai">ONNX</a> </pre></small>
 								</div>
 						</div>
 				</div>
