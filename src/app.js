@@ -1,15 +1,40 @@
 import Vue from 'vue/dist/vue.js';
 import { initialize } from './game.js';
 
-initialize().then((Game) => {
+const setup_listeners = (game) => {
+  // Setup keyEvents
+  window.addEventListener('keydown', (e) => {
+    if (e.keyCode == 37 || e.keyCode == 65)
+      // left / a
+      game.left();
+    if (e.keyCode == 38 || e.keyCode == 87)
+      // up / w
+      game.up();
+    if (e.keyCode == 39 || e.keyCode == 68)
+      // right / d
+      game.right();
+    if (e.keyCode == 40 || e.keyCode == 83)
+      // down / s
+      game.down();
+  });
+
+  // Mobile btn listeners
+  document.getElementById('left-btn').addEventListener('mousedown', (e) => {
+    game.down();
+    game.left();
+  });
+  document.getElementById('right-btn').addEventListener('mousedown', (e) => {
+    game.up();
+    game.right();
+  });
+};
+
+initialize().then((game) => {
   let app = new Vue({
     el: '#app',
 
     data: {
-      snake: { x: {}, y: {} },
-      food: {},
-      height: 9,
-      width: 9,
+      state: [],
       running: false,
     },
 
@@ -18,85 +43,45 @@ initialize().then((Game) => {
     },
 
     methods: {
-      up: () => {},
-      down: () => {},
-      left: () => {},
-      right: () => {},
+      start: (enable_ai) => {
+        if (!enable_ai) {
+          setup_listeners(game);
+        }
 
-      isSnake: (x, y) => app.snake.some((el) => el.x == x && el.y == y),
-      isFood: (x, y) => app.food.x == x && app.food.y == y,
+        // Setup ticker function
+        app.tick = async () => {
+          app.state = game.tick();
 
-      start: () => {
-        Game.initialize().then((_game_) => {
-          const game = _game_;
+          if (game.is_done()) {
+            // halt for 1000 ms, then reset and continue
+            setTimeout(() => {
+              game.reset();
+              app.tick();
+            }, 1000);
+            return;
+          }
 
-          window.GAME = game;
+          if (enable_ai) {
+            await game.input_ai();
+          }
 
-          app.up = () => game.snake.up();
-          app.down = () => game.snake.down();
-          app.left = () => game.snake.left();
-          app.right = () => game.snake.right();
+          // Next tick
+          setTimeout(app.tick, 100);
+        };
 
-          // Setup keyEvents
-          window.addEventListener('keydown', (e) => {
-            if (e.keyCode == 37 || e.keyCode == 65)
-              // left / a
-              app.left();
-            if (e.keyCode == 38 || e.keyCode == 87)
-              // up / w
-              app.up();
-            if (e.keyCode == 39 || e.keyCode == 68)
-              // right / d
-              app.right();
-            if (e.keyCode == 40 || e.keyCode == 83)
-              // down / s
-              app.down();
-          });
+        // Reset game
+        game.reset(app.width, app.height);
+        app.width = game.width;
+        app.height = game.height;
 
-          // Mobile btn listeners
-          document
-            .getElementById('left-btn')
-            .addEventListener('mousedown', (e) => {
-              app.down();
-              app.left();
-            });
-          document
-            .getElementById('right-btn')
-            .addEventListener('mousedown', (e) => {
-              app.up();
-              app.right();
-            });
+        // Set running
+        app.running = true;
 
-          // Setup ticker function
-          app.tick = () => {
-            game.tick();
+        // Focus hidden input field to receive key events
+        app.$el.focus();
 
-            if (game.isEnded()) game.reset(app.width, app.height);
-
-            // Refresh snake
-            app.snake = game.snake.body();
-
-            // Refresh food
-            app.food = game.food();
-
-            // Next tick
-            setTimeout(app.tick, 100);
-          };
-
-          // Reset game
-          game.reset(app.width, app.height);
-          app.height = game.height();
-          app.width = game.width();
-
-          // Set running
-          app.running = true;
-
-          // Focus hidden input field to receive key events
-          app.$el.focus();
-
-          // First tick
-          app.tick();
-        });
+        // First tick
+        app.tick();
       },
     },
   });

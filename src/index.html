@@ -17,14 +17,15 @@
 										<!-- Start view -->
 										<div v-if="!running">
 												<label class="text-center">Play snake?</label>
-												<button class="six columns offset-by-three" v-on:click="start">Let's play snake!</button>
+												<button class="six columns offset-by-three button-primary" v-on:click="start(false)">Let me play snake!</button>
+												<button class="six columns offset-by-three" v-on:click="start(true)">Let AI play snake!</button>
 										</div>
 
 										<!-- Game view -->
 										<div v-if="running" class="flex-column" v-bind:style="{'height': areaHeight}">
-												<div class="grow flex" v-for="(valY, y) in height">
-														<div class="grow grid-cell" v-for="(valX, x) in width">
-																<div class="grid-item" v-bind:class="{ snake: isSnake(x,y), food: isFood(x,y)}">
+												<div class="grow flex" v-for="row in state">
+														<div class="grow grid-cell" v-for="cell in row">
+																<div class="grid-item" v-bind:class="{ head: cell == 1, body: cell == 0, food: cell == 3}">
 																</div>
 														</div>
 												</div>

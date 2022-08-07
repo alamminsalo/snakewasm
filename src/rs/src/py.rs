@@ -1,6 +1,5 @@
 use pyo3::prelude::*;
 
-/// Formats the sum of two numbers as string.
 #[pyfunction]
 fn state() -> PyResult<Vec<Vec<i8>>> {
     Ok(crate::state())
@@ -11,7 +10,6 @@ fn state_model() -> PyResult<Vec<Vec<f32>>> {
     Ok(crate::state_model())
 }
 
-/// Formats the sum of two numbers as string.
 #[pyfunction]
 fn reset(w: usize, h: usize) {
     crate::reset(w as u16, h as u16);
@@ -22,33 +20,21 @@ fn score() -> PyResult<usize> {
     Ok(crate::snake_len() - 4)
 }
 
-/// Formats the sum of two numbers as string.
 #[pyfunction]
 fn input(cmd: u8) {
-    match cmd {
-        0 => crate::snake_up(),
-        1 => crate::snake_down(),
-        2 => crate::snake_left(),
-        _ => crate::snake_right(),
-    }
+    crate::input(cmd);
 }
 
-/// Formats the sum of two numbers as string.
 #[pyfunction]
 fn input_turn(cmd: u8) {
-    match cmd {
-        1 => crate::snake_turn_left(),
-        2 => crate::snake_turn_right(),
-        _ => {}
-    }
+    crate::input_turn(cmd);
 }
-/// Formats the sum of two numbers as string.
+
 #[pyfunction]
 fn tick() {
     crate::tick();
 }
 
-/// Formats the sum of two numbers as string.
 #[pyfunction]
 fn done() -> PyResult<bool> {
     Ok(crate::is_ended())

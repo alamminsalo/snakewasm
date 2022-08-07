@@ -1,6 +1,5 @@
 extern crate rand;
-use ndarray::{Array2, ArrayBase};
-use serde::{Deserialize, Serialize};
+use ndarray::Array;
 use wasm_bindgen::prelude::*;
 
 #[macro_use]
@@ -127,7 +126,7 @@ pub fn snake_body() -> Vec<(i16, i16)> {
     GAME.lock().unwrap().get_snake().body().clone()
 }
 
-pub fn state() -> Vec<Vec<i8>> {
+pub fn state() -> Vec<i8> {
     let mut game = GAME.lock().unwrap();
     let width = game.width() as usize;
     let height = game.height() as usize;
@@ -151,11 +150,30 @@ pub fn state() -> Vec<Vec<i8>> {
         state[*snake_y as usize][*snake_x as usize] = 0;
     }
 
-    state
+    state.into_iter().flatten().collect()
+}
+
+#[wasm_bindgen]
+pub fn input_turn(cmd: u8) {
+    match cmd {
+        1 => crate::snake_turn_left(),
+        2 => crate::snake_turn_right(),
+        _ => {}
+    }
+}
+
+#[wasm_bindgen]
+pub fn input(cmd: u8) {
+    match cmd {
+        0 => crate::snake_up(),
+        1 => crate::snake_down(),
+        2 => crate::snake_left(),
+        _ => crate::snake_right(),
+    }
 }
 
 // Returns compatible state for neural network input
-pub fn state_model() -> Vec<Vec<f32>> {
+pub fn state_model() -> Vec<f32> {
     let mut game = GAME.lock().unwrap();
     let width = game.width() as usize;
     let height = game.height() as usize;
@@ -183,12 +201,8 @@ pub fn state_model() -> Vec<Vec<f32>> {
     // rotate array to face always into current direction of the snake (upwards)
     m_state = util::rot90(m_state, 4 - game.snake_dir() as usize);
 
-    let mut result = vec![];
-    for row in m_state.rows() {
-        result.push(row.to_vec());
-    }
-
-    result
+    // return as 1d vec
+    Array::from_iter(m_state.iter().cloned()).to_vec()
 }
 
 #[wasm_bindgen]

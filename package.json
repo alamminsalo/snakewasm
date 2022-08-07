@@ -1,9 +1,10 @@
 {
   "scripts": {},
   "devDependencies": {
-    "css-loader": "^0.28.7",
     "parcel": "^2.7.0",
-    "rust-wasm-loader": "^0.1.2",
     "vue": "^2.5.2"
+  },
+  "dependencies": {
+    "tractjs": "^0.4.0"
   }
 }
