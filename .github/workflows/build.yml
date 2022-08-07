@@ -65,6 +65,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: dist
+          path: ./dist
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
