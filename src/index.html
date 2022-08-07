@@ -8,24 +8,26 @@
 				<title>Snake WASM</title>
 				<script type="module" src="index.js"></script>
 		</head>
-		<body>
+		<body class="bg">
 				<div class="fill-height flex align-items-center">
 						<div class="container">
 								<!-- Page content -->
-								<div id="app" class="eight columns offset-by-two">
+								<div id="app" class="eight columns offset-by-two container">
+										<div v-if="!running" class="row">
+												<p class="text-center">Select player</p>
+										</div>
 
 										<!-- Start view -->
-										<div v-if="!running">
-												<label class="text-center">Play snake?</label>
-												<button class="six columns offset-by-three button-primary" v-on:click="start(false)">Let me play snake!</button>
-												<button class="six columns offset-by-three" v-on:click="start(true)">Let AI play snake!</button>
+										<div v-if="!running" class="row">
+												<button class="six columns button-primary" v-on:click="start(false)">Me</button>
+												<button class="six columns button-secondary" v-on:click="start(true)">AI</button>
 										</div>
 
 										<!-- Game view -->
 										<div v-if="running" class="flex-column" v-bind:style="{'height': areaHeight}">
 												<div class="grow flex" v-for="row in state">
 														<div class="grow grid-cell" v-for="cell in row">
-																<div class="grid-item" v-bind:class="{ head: cell == 1, body: cell == 0, food: cell == 3}">
+																<div class="grid-item" v-bind:class="{ snake: cell < 2, head: cell==1, food: cell == 3}">
 																</div>
 														</div>
 												</div>
@@ -38,6 +40,10 @@
 												<div class="grow"></div>
 
 												<div id="right-btn" class="btn fa fa-arrow-right rotate-neg-45"></div>
+										</div>
+
+										<div v-show="running" class="ten columns offset-by-one text-center">
+												<button class="six columns offset-by-three" v-on:click="stop()">Back</button>
 										</div>
 								</div>
 

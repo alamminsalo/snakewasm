@@ -53,23 +53,25 @@ initialize().then((game) => {
 
         // Setup ticker function
         app.tick = async () => {
-          app.state = game.tick();
+          if (app.running) {
+            app.state = game.tick();
 
-          if (game.is_done()) {
-            // halt for 1000 ms, then reset and continue
-            setTimeout(() => {
-              game.reset();
-              app.tick();
-            }, 1000);
-            return;
+            if (game.is_done()) {
+              // halt for 1000 ms, then reset and continue
+              setTimeout(() => {
+                game.reset();
+                app.tick();
+              }, 1000);
+              return;
+            }
+
+            if (enable_ai) {
+              await game.input_ai();
+            }
+
+            // Next tick
+            setTimeout(app.tick, 100);
           }
-
-          if (enable_ai) {
-            await game.input_ai();
-          }
-
-          // Next tick
-          setTimeout(app.tick, 100);
         };
 
         // Reset game
@@ -85,6 +87,11 @@ initialize().then((game) => {
 
         // First tick
         app.tick();
+      },
+
+      stop: () => {
+        console.log('stop game');
+        app.running = false;
       },
     },
   });

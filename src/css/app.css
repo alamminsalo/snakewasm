@@ -1,3 +1,15 @@
+:root {
+  --bg: #0e131f;
+  --fg: #dddddf20;
+  --snake: #ffcab1;
+  --food: #da4167;
+}
+
+.bg {
+  background-color: var(--bg);
+  color: white;
+}
+
 .flex-column {
   display: flex;
   flex-direction: column;
@@ -17,29 +29,27 @@
   border-radius: 50%;
   height: 50%;
   width: 50%;
-  background-color: #eee;
+  background-color: var(--fg);
   transition: all 0.1s;
 }
 
-.head {
+.snake {
   border-radius: 12%;
-  height: 72%;
-  width: 72%;
-  background-color: #444;
+  height: 70%;
+  width: 70%;
+  background-color: var(--snake);
 }
 
-.body {
-  border-radius: 12%;
-  height: 69%;
-  width: 69%;
-  background-color: #666;
+.head {
+  height: 75%;
+  width: 75%;
 }
 
 .food {
   border-radius: 12%;
   height: 60%;
   width: 60%;
-  background-color: #f15;
+  background-color: var(--food);
 }
 
 .fill-height {
@@ -105,11 +115,11 @@
   border-radius: 50%;
   height: 4em;
   width: 4em;
-  background-color: #ddd;
+  background-color: #ddd1;
   margin: 1em;
   margin-top: 0;
 }
 
 .btn:hover {
-  background-color: #aaa;
+  background-color: #ddd3;
 }
