@@ -1,5 +1,7 @@
 {
-  "scripts": {},
+  "scripts": {
+    "build": "parcel build src/index.html && cp notebook/snake.onnx dist/"
+  },
   "devDependencies": {
     "parcel": "^2.7.0",
     "vue": "^2.5.2"
