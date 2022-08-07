@@ -3,8 +3,6 @@
 		<head>
 				<meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
 				<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-				<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-
 				<title>Snake WASM</title>
 				<script type="module" src="index.js"></script>
 		</head>
@@ -25,9 +23,9 @@
 
 										<!-- Game view -->
 										<div v-if="running" class="flex-column" v-bind:style="{'height': areaHeight}">
-												<div class="grow flex" v-for="row in state">
-														<div class="grow grid-cell" v-for="cell in row">
-																<div class="grid-item" v-bind:class="{ snake: cell < 2, head: cell==1, food: cell == 3}">
+												<div class="grow flex" v-for="(row, y) in state">
+														<div class="grow grid-cell" v-for="(cell, x) in row">
+																<div class="grid-item" v-bind:class="{ snake: cell < 2, head: cell==1, food: cell == 3}" :item="[x,y]" v-on:click="cell_clicked">
 																</div>
 														</div>
 												</div>
@@ -42,7 +40,8 @@
 												<div id="right-btn" class="btn fa fa-arrow-right rotate-neg-45"></div>
 										</div>
 
-										<div v-show="running" class="ten columns offset-by-one text-center">
+										<!-- back button -->
+										<div v-show="running" class="twelve columns text-center">
 												<button class="six columns offset-by-three" v-on:click="stop()">Back</button>
 										</div>
 								</div>
@@ -57,8 +56,6 @@
 												<a href="https://pytorch.org/">PyTorch</a> and
 												<a href="https://onnx.ai">ONNX</a>
 										</small>
-										<br/>
-										<small>
 								</div>
 						</div>
 				</div>

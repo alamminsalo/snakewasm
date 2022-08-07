@@ -30,7 +30,13 @@
   height: 50%;
   width: 50%;
   background-color: var(--fg);
-  transition: all 0.1s;
+  transition: all 0.125s;
+}
+
+.grid-item:hover {
+  height: 80%;
+  width: 80%;
+  cursor: pointer;
 }
 
 .snake {

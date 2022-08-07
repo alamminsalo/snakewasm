@@ -21,7 +21,7 @@ use std::sync::Mutex;
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
 lazy_static! {
-    static ref GAME: Mutex<Game> = Mutex::new(Game::new(100, 100));
+    static ref GAME: Mutex<Game> = Mutex::new(Game::new(9, 9));
 }
 
 #[wasm_bindgen]
@@ -42,16 +42,6 @@ pub fn reset(w: u16, h: u16) {
 #[wasm_bindgen]
 pub fn snake_len() -> usize {
     GAME.lock().unwrap().get_snake().body().len()
-}
-
-#[wasm_bindgen]
-pub fn snake_x_at(idx: usize) -> i16 {
-    GAME.lock().unwrap().get_snake().body()[idx].0
-}
-
-#[wasm_bindgen]
-pub fn snake_y_at(idx: usize) -> i16 {
-    GAME.lock().unwrap().get_snake().body()[idx].1
 }
 
 #[wasm_bindgen]
@@ -93,18 +83,13 @@ pub fn food() -> (i16, i16) {
     GAME.lock().unwrap().get_food().unwrap_or((-1, -1))
 }
 
+#[wasm_bindgen]
+pub fn set_food(x: i16, y: i16) {
+    GAME.lock().unwrap().set_food(x, y);
+}
+
 pub fn head() -> (i16, i16) {
     GAME.lock().unwrap().get_snake().head()
-}
-
-#[wasm_bindgen]
-pub fn food_x() -> i16 {
-    GAME.lock().unwrap().get_food().unwrap_or((-1, -1)).0
-}
-
-#[wasm_bindgen]
-pub fn food_y() -> i16 {
-    GAME.lock().unwrap().get_food().unwrap_or((-1, -1)).1
 }
 
 #[wasm_bindgen]

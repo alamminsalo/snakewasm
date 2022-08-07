@@ -32,6 +32,14 @@ impl Game {
         &self.food
     }
 
+    pub fn set_food(&mut self, x: i16, y: i16) {
+        let free = self.free_grid();
+        let xy = (x, y);
+        if free.contains(&xy) {
+            self.food = Some(xy);
+        }
+    }
+
     pub fn is_ended(&self) -> bool {
         self.ended
     }
