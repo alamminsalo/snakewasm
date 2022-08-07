@@ -57,14 +57,14 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Download a single artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: dist
       - name: Checkout
         uses: actions/checkout@v3
       - name: Setup Pages
         uses: actions/configure-pages@v1
+      - name: Download dist artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: dist
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
