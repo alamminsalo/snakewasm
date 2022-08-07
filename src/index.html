@@ -11,9 +11,10 @@
 				<div class="fill-height flex align-items-center">
 						<div class="container">
 								<!-- Page content -->
-								<div id="app" class="ten columns offset-by-one">
+								<div id="app" class="ten columns offset-by-one text-center">
 										<div v-if="!running" class="row">
-												<pre class="text-center">Select player</pre>
+												<h1><pre>snake</pre></h1>
+												<pre>Select player</pre>
 										</div>
 
 										<!-- Start view -->
@@ -23,7 +24,7 @@
 										</div>
 
 										<!-- legend -->
-										<div v-show="!running" class="twelve columns text-center">
+										<div v-show="!running" class="twelve columns">
 												<small><pre>Press &lt;<b>Space</b>&gt; to pause. Click anywhere to drop food.</pre></small>
 										</div>
 
@@ -47,13 +48,13 @@
 										</div>
 
 										<!-- back button -->
-										<div v-show="running" class="twelve columns text-center">
+										<div v-show="running" class="twelve columns">
 												<button class="six columns offset-by-three" v-on:click="stop()">Back</button>
 										</div>
 								</div>
 
 								<!-- Info -->
-								<div class="ten columns offset-by-one text-center">
+								<div class="ten columns offset-by-one">
 										<small><pre><a href="https://github.com/alamminsalo/snakewasm">Github</a> | Made using <a href="https://vuejs.org">Vue.js</a>, <a href="https://rust-lang.org">Rust</a>, <a href="https://pytorch.org/">PyTorch</a> and <a href="https://onnx.ai">ONNX</a> </pre></small>
 								</div>
 						</div>
