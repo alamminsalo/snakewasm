@@ -27,7 +27,7 @@ jobs:
         working-directory: ./src/rs
 
       - name: Install NPM deps
-        run: npm ci
+        run: npm i
 
       - name: Build dist
         run: npm run build
