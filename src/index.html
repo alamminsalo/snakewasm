@@ -21,6 +21,11 @@
 												<button class="six columns button-secondary" v-on:click="start(true)">AI</button>
 										</div>
 
+										<!-- legend -->
+										<div v-show="!running" class="twelve columns text-center">
+												<pre>Press &lt;<b>Space</b>&gt; to pause. Click anywhere to drop food.</pre>
+										</div>
+
 										<!-- Game view -->
 										<div v-if="running" class="flex-column" v-bind:style="{'height': areaHeight}">
 												<div class="grow flex" v-for="(row, y) in state">
