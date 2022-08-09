@@ -1,28 +1,32 @@
+/**
+ * game.js
+ *
+ * Contains interfacing logic with game wasm binary.
+ * Also handles loading and predicting next input with neural network model.
+ *
+ */
 import init, { state_js, state_model_js } from './rs/pkg';
 import * as tractjs from 'tractjs';
 
 // chunks array to n parts
 const chunked = (arr, n) =>
-  Array.from({ length: Math.ceil(arr.length / n) }, (v, i) =>
+  Array.from({ length: Math.ceil(arr.length / n) }, (_, i) =>
     arr.slice(i * n, i * n + n),
   );
 
 export const initialize = async () => {
-  console.log('initialize game...');
-  console.log('loading game wasm...');
-  self.snake = await init();
-  console.log('loaded wasm');
+  self.width = 9;
+  self.height = 9;
 
-  console.log('loading onnx model...');
+  // load game wasm
+  self.snake = await init();
+
+  // load onnx model
   const model = await tractjs.load('./snake.onnx', {
     inputFacts: {
       0: ['float32', [1, 9, 9, 1]],
     },
   });
-  console.log('loaded onnx model.');
-
-  self.width = 9;
-  self.height = 9;
 
   self.reset = () => {
     self.snake.reset(self.width, self.height);
@@ -65,20 +69,13 @@ export const initialize = async () => {
   };
 
   // player inputs
-  self.up = () => {
-    self.snake.input(0);
-  };
-  self.down = () => {
-    self.snake.input(1);
-  };
-  self.left = () => {
-    self.snake.input(2);
-  };
-  self.right = () => {
-    self.snake.input(3);
-  };
+  self.up = () => self.snake.input(0);
+  self.down = () => self.snake.input(1);
+  self.left = () => self.snake.input(2);
+  self.right = () => self.snake.input(3);
 
-  window.game = self;
+  // debugging
+  // window.game = self;
 
   return self;
 };

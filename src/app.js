@@ -1,3 +1,11 @@
+/**
+ *
+ * app.js
+ *
+ * Contains vue component, user inputs
+ * and game ticking logic.
+ *
+ */
 import Vue from 'vue/dist/vue.js';
 import { initialize } from './game.js';
 
@@ -17,13 +25,10 @@ initialize().then((game) => {
     },
 
     methods: {
+      // starts the game
+      // enable_ai by is set by default to
       start: (enable_ai) => {
         app.enable_ai = enable_ai;
-
-        // Reset game
-        game.reset(app.width, app.height);
-        app.width = game.width;
-        app.height = game.height;
 
         // Set running
         app.running = true;
@@ -31,44 +36,37 @@ initialize().then((game) => {
         // Focus hidden input field to receive key events
         app.$el.focus();
 
+        // Reset game and receive first state
+        app.state = game.reset();
+
         // First tick
         app.tick();
       },
 
       stop: () => {
-        console.log('stop game');
         app.running = false;
       },
 
       pause: () => {
         app.paused = !app.paused;
-        if (!app.paused) {
-          app.tick();
-        }
+
+        // when unpausing, continue ticking
+        if (!app.paused) app.tick();
       },
 
       // Setup ticker function
       tick: async () => {
-        if (app.running) {
+        if (app.running && !app.paused) {
+          // if enabled, get input from ai model
+          if (app.enable_ai) await game.input_ai();
+
+          // tick game and receive next
           app.state = game.tick();
 
-          if (game.is_done()) {
-            // halt for 1000 ms, then reset and continue
-            setTimeout(() => {
-              game.reset();
-              app.tick();
-            }, 1000);
-            return;
-          }
-
-          if (app.enable_ai) {
-            await game.input_ai();
-          }
-
-          if (!app.paused) {
-            // Next tick
-            setTimeout(app.tick, 100);
-          }
+          // if game has not ended, schedule next tick in 100 ms
+          if (!game.is_done()) setTimeout(app.tick, 100);
+          // otherwise, restart the game after 1 second
+          else setTimeout(app.start(app.enable_ai), 1000);
         }
       },
 
@@ -89,28 +87,21 @@ initialize().then((game) => {
 
     // runs on dom mount
     mounted: () => {
-      console.log('created');
       // Setup keyEvents
       window.addEventListener('keydown', (e) => {
         if (!app.enable_ai) {
-          if (e.keyCode == 37 || e.keyCode == 65)
-            // left / a
-            game.left();
-          if (e.keyCode == 38 || e.keyCode == 87)
-            // up / w
-            game.up();
-          if (e.keyCode == 39 || e.keyCode == 68)
-            // right / d
-            game.right();
-          if (e.keyCode == 40 || e.keyCode == 83)
-            // down / s
-            game.down();
+          // left / a
+          if (e.keyCode == 37 || e.keyCode == 65) game.left();
+          // up / w
+          if (e.keyCode == 38 || e.keyCode == 87) game.up();
+          // right / d
+          if (e.keyCode == 39 || e.keyCode == 68) game.right();
+          // down / s
+          if (e.keyCode == 40 || e.keyCode == 83) game.down();
         }
 
-        if (e.keyCode == 32) {
-          // space / pause
-          app.pause();
-        }
+        // space pauses the game
+        if (e.keyCode == 32) app.pause();
       });
 
       // Mobile btn listeners
