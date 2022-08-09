@@ -200,25 +200,25 @@ pub fn state_model_js() -> JsValue {
     JsValue::from_serde(&state_model()).unwrap()
 }
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn test_dir() {
-        reset(16, 16);
-        snake_up();
-        tick();
-        assert!(GAME.lock().unwrap().get_snake().direction() == Direction::Top);
-
-        snake_left();
-        tick();
-        assert!(GAME.lock().unwrap().get_snake().direction() == Direction::Left);
-
-        snake_down();
-        tick();
-        assert!(GAME.lock().unwrap().get_snake().direction() == Direction::Bottom);
-
-        snake_right();
-        tick();
-        assert!(GAME.lock().unwrap().get_snake().direction() == Direction::Right);
-    }
-}
+//#[cfg(test)]
+//mod tests {
+//    #[test]
+//    fn test_dir() {
+//        reset(16, 16);
+//        snake_up();
+//        tick();
+//        assert!(GAME.lock().unwrap().get_snake().direction() == Direction::Top);
+//
+//        snake_left();
+//        tick();
+//        assert!(GAME.lock().unwrap().get_snake().direction() == Direction::Left);
+//
+//        snake_down();
+//        tick();
+//        assert!(GAME.lock().unwrap().get_snake().direction() == Direction::Bottom);
+//
+//        snake_right();
+//        tick();
+//        assert!(GAME.lock().unwrap().get_snake().direction() == Direction::Right);
+//    }
+//}

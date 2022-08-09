@@ -56,9 +56,9 @@ impl Game {
         }
     }
 
-    fn in_bounds(dim: (u16, u16), pos: (i16, i16)) -> bool {
-        pos.0 >= 0 && (pos.0 as u16) < dim.0 && pos.1 >= 0 && (pos.1 as u16) < dim.1
-    }
+    //fn in_bounds(dim: (u16, u16), pos: (i16, i16)) -> bool {
+    //    pos.0 >= 0 && (pos.0 as u16) < dim.0 && pos.1 >= 0 && (pos.1 as u16) < dim.1
+    //}
 
     // Handle border-crossing and translates coordinates when needed
     fn translate(dim: (u16, u16), pos: (i16, i16)) -> (i16, i16) {
@@ -146,59 +146,59 @@ impl Game {
     }
 }
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn test_tick() {
-        let mut game = Game::new(32, 32);
-
-        {
-            let snake = game.snakes.get_mut(0).unwrap();
-            snake.goto((0, 0));
-            snake.dir(Direction::Left);
-        }
-
-        game.tick();
-        game.tick();
-        game.tick();
-
-        {
-            let snake = game.snakes.get_mut(0).unwrap();
-            assert_eq!((29, 0), snake.head());
-            snake.dir(Direction::Right);
-        }
-
-        game.tick();
-        game.tick();
-
-        {
-            let snake = game.snakes.get_mut(0).unwrap();
-            assert_eq!((27, 0), snake.head());
-        }
-    }
-
-    #[test]
-    fn test_grid() {
-        let mut game = Game::new(10, 10);
-        {
-            let snake = game.snakes.get_mut(0).unwrap();
-            snake.goto((0, 0));
-            snake.dir(Direction::Left);
-        }
-
-        game.tick();
-        game.tick();
-
-        let grid = game.grid();
-        let free = game.free_grid();
-        assert!(free.len() < game.grid().len());
-
-        {
-            let snake = game.snakes.get_mut(0).unwrap();
-            assert!(free.len() + snake.body().len() == grid.len());
-            for part in &snake.body() {
-                assert!(!free.contains(&part));
-            }
-        }
-    }
-}
+// #[cfg(test)]
+// mod tests {
+//     #[test]
+//     fn test_tick() {
+//         let mut game = Game::new(32, 32);
+//
+//         {
+//             let snake = game.snakes.get_mut(0).unwrap();
+//             snake.goto((0, 0));
+//             snake.dir(Direction::Left);
+//         }
+//
+//         game.tick();
+//         game.tick();
+//         game.tick();
+//
+//         {
+//             let snake = game.snakes.get_mut(0).unwrap();
+//             assert_eq!((29, 0), snake.head());
+//             snake.dir(Direction::Right);
+//         }
+//
+//         game.tick();
+//         game.tick();
+//
+//         {
+//             let snake = game.snakes.get_mut(0).unwrap();
+//             assert_eq!((27, 0), snake.head());
+//         }
+//     }
+//
+//     #[test]
+//     fn test_grid() {
+//         let mut game = Game::new(10, 10);
+//         {
+//             let snake = game.snakes.get_mut(0).unwrap();
+//             snake.goto((0, 0));
+//             snake.dir(Direction::Left);
+//         }
+//
+//         game.tick();
+//         game.tick();
+//
+//         let grid = game.grid();
+//         let free = game.free_grid();
+//         assert!(free.len() < game.grid().len());
+//
+//         {
+//             let snake = game.snakes.get_mut(0).unwrap();
+//             assert!(free.len() + snake.body().len() == grid.len());
+//             for part in &snake.body() {
+//                 assert!(!free.contains(&part));
+//             }
+//         }
+//     }
+// }
