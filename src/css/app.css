@@ -2,7 +2,10 @@
   --bg: #0e131f;
   --fg: #dddddf20;
   --snake: #ffcab1;
-  --food: #da4167;
+  --primary: #21a179aa;
+  --secondary: #da4167;
+
+  --food: var(--secondary);
 }
 
 .bg {
@@ -134,4 +137,8 @@
 
 .caption {
   color: grey;
+}
+
+.active {
+  border-color: var(--secondary) !important;
 }

@@ -17,7 +17,7 @@ fn reset(w: usize, h: usize) {
 
 #[pyfunction]
 fn score() -> PyResult<usize> {
-    Ok(crate::snake_len() - 4)
+    Ok(crate::score())
 }
 
 #[pyfunction]

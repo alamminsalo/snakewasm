@@ -18,6 +18,8 @@ initialize().then((game) => {
       running: false,
       enable_ai: false,
       paused: false,
+      autopause: false, // when enabled, automatically pauses game on receiving score point
+      score: 0,
     },
 
     computed: {
@@ -26,7 +28,6 @@ initialize().then((game) => {
 
     methods: {
       // starts the game
-      // enable_ai by is set by default to
       start: (enable_ai) => {
         app.enable_ai = enable_ai;
 
@@ -35,6 +36,9 @@ initialize().then((game) => {
 
         // Focus hidden input field to receive key events
         app.$el.focus();
+
+        // reset score
+        app.score = 0;
 
         // Reset game and receive first state
         app.state = game.reset();
@@ -45,13 +49,6 @@ initialize().then((game) => {
 
       stop: () => {
         app.running = false;
-      },
-
-      pause: () => {
-        app.paused = !app.paused;
-
-        // when unpausing, continue ticking
-        if (!app.paused) app.tick();
       },
 
       // Setup ticker function
@@ -68,6 +65,13 @@ initialize().then((game) => {
           // otherwise, restart the game after 1 second
           else setTimeout(app.start(app.enable_ai), 1000);
         }
+
+        // update score and handle autopausing if enabled
+        const new_score = game.score();
+        if (app.autopause && new_score > app.score) {
+          app.paused = true;
+        }
+        app.score = new_score;
       },
 
       cell_clicked: (ev) => {
@@ -78,10 +82,36 @@ initialize().then((game) => {
           .map(Number);
 
         // set new food position
-        game.snake.set_food(x, y);
+        game.set_food(x, y);
 
         // get new state since food position is changed (unless invalid position)
         app.state = game.state();
+
+        // if autopause, unpause game
+        if (app.autopause && app.paused) {
+          app.toggle_pause();
+        }
+      },
+
+      toggle_pause: () => {
+        app.paused = !app.paused;
+
+        // when unpausing, continue ticking
+        if (!app.paused) app.tick();
+      },
+
+      toggle_autopause: (ev) => {
+        app.autopause = !app.autopause;
+
+        // if disabling autopause, unpause game
+        if (!app.autopause && app.paused) {
+          app.toggle_pause();
+        }
+
+        // Prevent the button from receiving focus,
+        // because interesting stuff starts to happen
+        // when space both toggles autopause and pause simultaneously.
+        ev.target.blur();
       },
     },
 
@@ -101,7 +131,7 @@ initialize().then((game) => {
         }
 
         // space pauses the game
-        if (e.keyCode == 32) app.pause();
+        if (e.keyCode == 32) app.toggle_pause();
       });
 
       // Mobile btn listeners

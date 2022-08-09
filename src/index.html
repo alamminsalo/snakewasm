@@ -37,6 +37,11 @@
 														</div>
 												</div>
 
+												<!-- back button -->
+												<div v-show="running" class="twelve columns">
+														<button class="six columns" v-bind:class="{twelve: !enable_ai}"v-on:click="stop()">Back</button>
+														<button v-show="enable_ai" class="six columns" v-bind:class="{active: autopause}" v-on:click="toggle_autopause">Autopause</button>
+												</div>
 										</div>
 
 										<!-- Mobile buttons -->
@@ -47,10 +52,6 @@
 												<div id="right-btn" class="btn fa fa-arrow-right rotate-neg-45"></div>
 										</div>
 
-										<!-- back button -->
-										<div v-show="running" class="twelve columns">
-												<button class="six columns offset-by-three" v-on:click="stop()">Back</button>
-										</div>
 								</div>
 
 								<!-- Info -->

@@ -19,7 +19,7 @@ export const initialize = async () => {
   self.height = 9;
 
   // load game wasm
-  self.snake = await init();
+  const snake = await init();
 
   // load onnx model
   const model = await tractjs.load('./snake.onnx', {
@@ -28,13 +28,17 @@ export const initialize = async () => {
     },
   });
 
+  self.score = () => {
+    return snake.score();
+  };
+
   self.reset = () => {
-    self.snake.reset(self.width, self.height);
+    snake.reset(self.width, self.height);
     return self.tick();
   };
 
   self.tick = () => {
-    self.snake.tick();
+    snake.tick();
     return self.state();
   };
 
@@ -44,11 +48,11 @@ export const initialize = async () => {
   };
 
   self.is_done = () => {
-    return self.snake.is_ended();
+    return snake.is_ended();
   };
 
   self.input = (cmd) => {
-    self.snake.input(cmd);
+    snake.input(cmd);
   };
 
   // uses ai-prediction for next input when called
@@ -65,14 +69,18 @@ export const initialize = async () => {
     const action = q.indexOf(max_q);
 
     // pass action as input_turn param to game
-    self.snake.input_turn(action);
+    snake.input_turn(action);
   };
 
   // player inputs
-  self.up = () => self.snake.input(0);
-  self.down = () => self.snake.input(1);
-  self.left = () => self.snake.input(2);
-  self.right = () => self.snake.input(3);
+  self.up = () => snake.input(0);
+  self.down = () => snake.input(1);
+  self.left = () => snake.input(2);
+  self.right = () => snake.input(3);
+
+  self.set_food = (x, y) => {
+    snake.set_food(x, y);
+  };
 
   // debugging
   // window.game = self;

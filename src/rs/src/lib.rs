@@ -25,6 +25,11 @@ lazy_static! {
 }
 
 #[wasm_bindgen]
+pub fn score() -> usize {
+    snake_len() - 4
+}
+
+#[wasm_bindgen]
 pub fn is_ended() -> bool {
     GAME.lock().unwrap().is_ended()
 }
