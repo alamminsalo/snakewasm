@@ -142,7 +142,7 @@ initialize().then((game) => {
       // Mobile btn listeners
       document.getElementById('left-btn').addEventListener('mousedown', (e) => {
         if (!app.enable_ai) {
-          game.down();
+          game.up();
           game.left();
         }
       });
@@ -150,7 +150,7 @@ initialize().then((game) => {
         .getElementById('right-btn')
         .addEventListener('mousedown', (e) => {
           if (!app.enable_ai) {
-            game.up();
+            game.down();
             game.right();
           }
         });

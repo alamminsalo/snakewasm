@@ -75,23 +75,18 @@
   align-items: center;
 }
 
+.rotate-45 {
+  -ms-transform: rotate(45deg);
+  -moz-transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
 .rotate-neg-45 {
   -ms-transform: rotate(-45deg);
   -moz-transform: rotate(-45deg);
   -webkit-transform: rotate(-45deg);
   transform: rotate(-45deg);
-}
-
-.justify-content-center {
-  justify-content: center;
-}
-
-.justify-content-end {
-  justify-content: flex-end;
-}
-
-.align-items-end {
-  align-items: flex-end;
 }
 
 .text-center {
@@ -148,4 +143,8 @@
 
 .active {
   border-color: var(--secondary) !important;
+}
+
+.padding-top {
+  padding-top: 1rem;
 }
