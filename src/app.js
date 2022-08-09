@@ -31,6 +31,11 @@ initialize().then((game) => {
       start: (enable_ai) => {
         app.enable_ai = enable_ai;
 
+        // disable autopause if human is playing
+        if (!enable_ai) {
+          app.autopause = false;
+        }
+
         // Set running
         app.running = true;
 
