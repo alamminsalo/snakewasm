@@ -36,26 +36,24 @@
 																</div>
 														</div>
 												</div>
-
-												<!-- back button -->
-												<div v-show="running" class="twelve columns">
-														<button class="six columns" v-bind:class="{twelve: !enable_ai}"v-on:click="stop()">Back</button>
-														<button v-show="enable_ai" class="six columns" v-bind:class="{active: autopause}" v-on:click="toggle_autopause">Autopause</button>
-												</div>
+										</div>
+										
+										<!-- Game buttons -->
+										<div v-show="running" class="twelve columns">
+												<button class="six columns" v-bind:class="{twelve: !enable_ai}"v-on:click="stop()">Back</button>
+												<button v-show="enable_ai" class="six columns" v-bind:class="{active: autopause}" v-on:click="toggle_autopause">Autopause</button>
 										</div>
 
 										<!-- Mobile buttons -->
-										<div v-show="running && !enable_ai" class="mobile footer flex">
+										<div v-show="running && !enable_ai" class="mobile mobile-buttons flex">
 												<div id="left-btn" class="btn fa fa-arrow-left rotate-neg-45"></div>
 												<div class="grow"></div>
-
 												<div id="right-btn" class="btn fa fa-arrow-right rotate-neg-45"></div>
 										</div>
-
 								</div>
 
 								<!-- Info -->
-								<div class="ten columns offset-by-one text-center">
+								<div class="footer ten columns offset-by-one text-center">
 										<small><pre><a href="https://github.com/alamminsalo/snakewasm">Github</a> | Made using <a href="https://vuejs.org">VueJS</a>, <a href="https://rust-lang.org">Rust</a>, <a href="https://pytorch.org/">PyTorch</a> and <a href="https://onnx.ai">ONNX</a> </pre></small>
 								</div>
 						</div>
