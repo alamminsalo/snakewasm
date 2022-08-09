@@ -5,10 +5,13 @@
   "devDependencies": {
     "@parcel/packager-raw-url": "^2.7.0",
     "@parcel/transformer-webmanifest": "^2.7.0",
-    "parcel": "^2.7.0",
-    "vue": "^2.5.2"
+    "parcel": "^2.7.0"
   },
   "dependencies": {
+    "vue": "^2.5.2",
     "tractjs": "^0.4.0"
+  },
+  "alias": {
+    "vue" : "./node_modules/vue/dist/vue.common.js"
   }
 }

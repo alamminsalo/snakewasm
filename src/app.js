@@ -6,7 +6,7 @@
  * and game ticking logic.
  *
  */
-import Vue from 'vue/dist/vue.js';
+import Vue from 'vue';
 import { initialize } from './game.js';
 
 initialize().then((game) => {
