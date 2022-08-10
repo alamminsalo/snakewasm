@@ -1,4 +1,4 @@
-# Rust + Vue2 snake game using ONNX pytorch AI model
+# Snake Game with AI
 
 [Live page](https://alamminsalo.github.io/snakewasm)
 
