@@ -68,7 +68,7 @@ initialize().then((game) => {
           // if game has not ended, schedule next tick in 100 ms
           if (!game.is_done()) setTimeout(app.tick, 100);
           // otherwise, restart the game after 1 second
-          else setTimeout(app.start(app.enable_ai), 1000);
+          else setTimeout(() => app.start(app.enable_ai), 1000);
         }
 
         // update score and handle autopausing if enabled

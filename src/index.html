@@ -29,8 +29,12 @@
 												<small><pre>Press &lt;<b>Space</b>&gt; to pause. Click anywhere to drop food.</pre></small>
 										</div>
 
+										<div v-if="running">
+												<h3><pre>{{ score }}</pre></h3>
+										</div>
+
 										<!-- Game view -->
-										<div v-if="running" class="flex-column" v-bind:style="{'height': areaHeight}">
+										<div v-if="running" class="flex-column row" v-bind:style="{'height': areaHeight}">
 												<div class="grow flex" v-for="(row, y) in state">
 														<div class="grow grid-cell" v-for="(cell, x) in row">
 																<div class="grid-item" v-bind:class="{ snake: cell < 2, head: cell==1, food: cell == 3}" :item="[x,y]" v-on:click="cell_clicked">
@@ -51,12 +55,13 @@
 												<div class="grow"></div>
 												<div id="right-btn" class="btn fa fa-arrow-right rotate-45"></div>
 										</div>
+
+										<!-- Info -->
+										<div class="row text-center" v-show="!running">
+												<h6><pre><a href="https://github.com/alamminsalo/snakewasm">Github</a></pre></h6>
+										</div>
 								</div>
 
-								<!-- Info -->
-								<div class="footer row text-center">
-										<small><pre><a href="https://github.com/alamminsalo/snakewasm">Github</a></pre></small>
-								</div>
 						</div>
 				</div>
 		</body>
