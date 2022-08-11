@@ -152,3 +152,7 @@
 .padding-top {
   padding-top: 1rem;
 }
+
+.nomargin * {
+  margin: 0 !important;
+}
