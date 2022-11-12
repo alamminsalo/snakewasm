@@ -5,7 +5,10 @@ use rand::seq::SliceRandom;
 use crate::util;
 use crate::{snake::Snake, Direction};
 
+use wasm_bindgen::prelude::*;
+
 #[derive(PartialEq)]
+//#[wasm_bindgen]
 pub struct Game {
     w: u16,
     h: u16,

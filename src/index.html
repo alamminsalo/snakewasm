@@ -37,7 +37,8 @@
 										<div v-if="running" class="flex-column row" v-bind:style="{'height': areaHeight}">
 												<div class="grow flex" v-for="(row, y) in state">
 														<div class="grow grid-cell" v-for="(cell, x) in row">
-																<div class="grid-item" v-bind:class="{ snake: cell < 2, head: cell==1, food: cell == 3}" :item="[x,y]" v-on:click="cell_clicked">
+																<div class="grid-item" v-bind:class="{ snake: cell.v < 2, head: cell.v==1, food: cell.v == 3}" :item="[x,y]" v-on:click="cell_clicked">
+																		<span class="qvalue" v-show="show_q" v-bind:class="{qhighest: cell.q_is_max}" >{{ cell.q }}</span>
 																</div>
 														</div>
 												</div>
@@ -45,8 +46,16 @@
 										
 										<!-- Game buttons -->
 										<div v-show="running" class="row padding-top">
-												<button class="six columns" v-bind:class="{twelve: !enable_ai}"v-on:click="stop()">Back</button>
-												<button v-show="enable_ai" class="six columns" v-bind:class="{active: autopause}" v-on:click="toggle_autopause">Autopause</button>
+												<button class="four columns" v-bind:class="{twelve: !enable_ai}" v-on:click="stop()">Back</button>
+												<button class="four columns" v-show="enable_ai" v-bind:class="{active: autopause}" v-on:click="toggle_autopause">Autopause</button>
+												<button class="four columns" v-show="enable_ai" v-bind:class="{active: show_q}" v-on:click="toggle_show_q">Show Q values</button>
+										</div>
+
+										<!-- speed buttons -->
+										<div v-show="running" class="row padding-top">
+												<button class="four columns" v-bind:class="{active: speed == 0.25}" v-on:click="set_speed(0.25)">0.25x</button>
+												<button class="four columns" v-bind:class="{active: speed == 0.5}" v-on:click="set_speed(0.5)">0.5x</button>
+												<button class="four columns" v-bind:class="{active: speed == 1.0}" v-on:click="set_speed(1.0)">1x</button>
 										</div>
 
 										<!-- Mobile buttons -->

@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "build": "parcel build --public-url '.' src/index.html && cp notebook/snake.onnx dist"
+    "build": "parcel build --public-url '.' src/index.html && cp notebook/snake.onnx dist",
+    "serve": "parcel src/index.html"
   },
   "devDependencies": {
     "@parcel/packager-raw-url": "^2.7.0",

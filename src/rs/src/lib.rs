@@ -197,12 +197,20 @@ pub fn state_model() -> Vec<f32> {
 
 #[wasm_bindgen]
 pub fn state_js() -> JsValue {
-    JsValue::from_serde(&state()).unwrap()
+    serde_wasm_bindgen::to_value(&state()).unwrap()
 }
 
 #[wasm_bindgen]
 pub fn state_model_js() -> JsValue {
-    JsValue::from_serde(&state_model()).unwrap()
+    serde_wasm_bindgen::to_value(&state_model()).unwrap()
+}
+
+#[wasm_bindgen]
+pub fn state_params_js() -> JsValue {
+    let mut game = GAME.lock().unwrap();
+    let head = game.get_snake().body()[..1][0].clone();
+
+    serde_wasm_bindgen::to_value(&[head.0, head.1, game.snake_dir() as i16]).unwrap()
 }
 
 //#[cfg(test)]

@@ -20,6 +20,8 @@ initialize().then((game) => {
       paused: false,
       autopause: false, // when enabled, automatically pauses game on receiving score point
       score: 0,
+      show_q: false,
+      speed: 1.0,
     },
 
     computed: {
@@ -60,13 +62,14 @@ initialize().then((game) => {
       tick: async () => {
         if (app.running && !app.paused) {
           // if enabled, get input from ai model
-          if (app.enable_ai) await game.input_ai();
+          if (app.enable_ai) 
+            await game.input_ai();
 
           // tick game and receive next
-          app.state = game.tick();
+          app.state = await game.tick();
 
           // if game has not ended, schedule next tick in 100 ms
-          if (!game.is_done()) setTimeout(app.tick, 100);
+          if (!game.is_done()) setTimeout(app.tick, 100 / app.speed);
           // otherwise, restart the game after 1 second
           else setTimeout(() => app.start(app.enable_ai), 1000);
         }
@@ -79,7 +82,7 @@ initialize().then((game) => {
         app.score = new_score;
       },
 
-      cell_clicked: (ev) => {
+      cell_clicked: async (ev) => {
         // get cell x, y values
         const [x, y] = ev.target
           .getAttributeNode('item')
@@ -90,7 +93,7 @@ initialize().then((game) => {
         game.set_food(x, y);
 
         // get new state since food position is changed (unless invalid position)
-        app.state = game.state();
+        app.state = await game.state();
 
         // if autopause, unpause game
         if (app.autopause && app.paused) {
@@ -117,6 +120,14 @@ initialize().then((game) => {
         // because interesting stuff starts to happen
         // when space both toggles autopause and pause simultaneously.
         ev.target.blur();
+      },
+
+      toggle_show_q: (ev) => {
+        app.show_q = !app.show_q;
+      },
+
+      set_speed: (speed) => {
+        app.speed = speed;
       },
     },
 

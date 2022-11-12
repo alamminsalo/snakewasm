@@ -156,3 +156,10 @@
 .nomargin * {
   margin: 0 !important;
 }
+
+.qvalue {
+}
+
+.qhighest {
+  color: var(--secondary) !important;
+}
