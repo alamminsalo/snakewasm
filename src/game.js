@@ -121,9 +121,9 @@ export const initialize = async () => {
     return snake.score();
   };
 
-  self.reset = () => {
+  self.reset = async () => {
     snake.reset(self.width, self.height);
-    return self.tick();
+    return await self.tick();
   };
 
   self.tick = async () => {
@@ -157,7 +157,7 @@ export const initialize = async () => {
       return null;
     };
 
-    const max_q = Math.max(...q);
+    const max_q = Math.max(...q).toFixed(2);
 
     state = chunked(state.flat().map((c, idx) => ({
       v: c,

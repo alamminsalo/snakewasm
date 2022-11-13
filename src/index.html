@@ -38,7 +38,7 @@
 												<div class="grow flex" v-for="(row, y) in state">
 														<div class="grow grid-cell" v-for="(cell, x) in row">
 																<div class="grid-item" v-bind:class="{ snake: cell.v < 2, head: cell.v==1, food: cell.v == 3}" :item="[x,y]" v-on:click="cell_clicked">
-																		<span class="qvalue" v-show="show_q" v-bind:class="{qhighest: cell.q_is_max}" >{{ cell.q }}</span>
+																		<pre class="qvalue nomargin" v-bind:class="{qhighest: cell.q_is_max}" v-show="show_q">{{ cell.q }}</pre>
 																</div>
 														</div>
 												</div>

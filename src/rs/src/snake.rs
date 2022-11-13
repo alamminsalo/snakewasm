@@ -35,8 +35,7 @@ impl Snake {
     // Sets snake dir, if valid
     // Returns new dir
     pub fn dir(&mut self, dir: Direction) -> Direction {
-        if dir != self.d
-            && ![&dir, &self.d]
+        if ![&dir, &self.d]
                 .iter()
                 .all(|&d| [Direction::Top, Direction::Bottom].contains(d))
             && ![&dir, &self.d]
@@ -57,7 +56,7 @@ impl Snake {
     pub fn peek(&self) -> (i16, i16) {
         let head = self.head();
 
-        match self.d {
+        match self.d_next.clone().unwrap_or(self.d.clone()) {
             Direction::Top => (head.0, head.1 - 1),
             Direction::Bottom => (head.0, head.1 + 1),
             Direction::Left => (head.0 - 1, head.1),

@@ -30,7 +30,7 @@ initialize().then((game) => {
 
     methods: {
       // starts the game
-      start: (enable_ai) => {
+      start: async (enable_ai) => {
         app.enable_ai = enable_ai;
 
         // disable autopause if human is playing
@@ -48,7 +48,7 @@ initialize().then((game) => {
         app.score = 0;
 
         // Reset game and receive first state
-        app.state = game.reset();
+        app.state = await game.reset();
 
         // First tick
         app.tick();

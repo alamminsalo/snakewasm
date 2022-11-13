@@ -158,8 +158,9 @@
 }
 
 .qvalue {
+  color: #aaa;
 }
 
 .qhighest {
-  color: var(--secondary) !important;
+  color: white !important;
 }
