@@ -1,68 +1,76 @@
+use crate::game::Game;
 use pyo3::prelude::*;
 
-#[pyfunction]
-fn state() -> PyResult<Vec<Vec<i8>>> {
-    Ok(crate::state())
+// python class wrapper for game
+#[pyclass]
+struct PyGame {
+    game: Game,
 }
 
-#[pyfunction]
-fn state_model() -> PyResult<Vec<Vec<f32>>> {
-    Ok(crate::state_model())
-}
+#[pymethods]
+impl PyGame {
+    #[new]
+    fn new(width: u16, height: u16) -> Self {
+        Self {
+            game: Game::new(width, height),
+        }
+    }
 
-#[pyfunction]
-fn reset(w: usize, h: usize) {
-    crate::reset(w as u16, h as u16);
-}
+    fn size(&self) -> PyResult<(u16, u16)> {
+        Ok((self.game.width(), self.game.height()))
+    }
 
-#[pyfunction]
-fn score() -> PyResult<usize> {
-    Ok(crate::score())
-}
+    fn state(&self) -> PyResult<Vec<i8>> {
+        Ok(self.game.state())
+    }
 
-#[pyfunction]
-fn input(cmd: u8) {
-    crate::input(cmd);
-}
+    fn state_model(&self) -> PyResult<Vec<f32>> {
+        Ok(self.game.state_model())
+    }
 
-#[pyfunction]
-fn input_turn(cmd: u8) {
-    crate::input_turn(cmd);
-}
+    fn reset(&mut self) {
+        self.game.reset();
+    }
 
-#[pyfunction]
-fn tick() {
-    crate::tick();
-}
+    fn score(&self) -> PyResult<usize> {
+        Ok(self.game.score())
+    }
 
-#[pyfunction]
-fn done() -> PyResult<bool> {
-    Ok(crate::is_ended())
-}
+    fn input(&mut self, cmd: u8) {
+        self.game.input(cmd);
+    }
 
-#[pyfunction]
-fn head() -> PyResult<(i16, i16)> {
-    Ok(crate::head())
-}
+    fn input_turn(&mut self, cmd: u8) {
+        self.game.input_turn(cmd);
+    }
 
-#[pyfunction]
-fn food() -> PyResult<(i16, i16)> {
-    Ok(crate::food())
-}
+    fn tick(&mut self) {
+        self.game.tick();
+    }
 
-#[pyfunction]
-fn tick_count() -> PyResult<usize> {
-    Ok(crate::tick_count())
-}
+    fn done(&self) -> PyResult<bool> {
+        Ok(self.game.is_ended())
+    }
 
-#[pyfunction]
-fn snake_dir() -> PyResult<u8> {
-    Ok(crate::snake_dir())
-}
+    // fn head(&self) -> PyResult<(i16, i16)> {
+    //     Ok(self.game.head())
+    // }
 
-#[pyfunction]
-fn snake_body() -> PyResult<Vec<(i16, i16)>> {
-    Ok(crate::snake_body())
+    // fn food(&self) -> PyResult<(i16, i16)> {
+    //     Ok(self.game.food())
+    // }
+
+    fn tick_count(&self) -> PyResult<usize> {
+        Ok(self.game.tick_count())
+    }
+
+    // fn snake_dir(&self) -> PyResult<u8> {
+    //     Ok(self.game.snake_dir())
+    // }
+
+    // fn snake_body(&self) -> PyResult<Vec<(i16, i16)>> {
+    //     Ok(self.game.snake_body())
+    // }
 }
 
 /// A Python module implemented in Rust. The name of this function must match
@@ -70,18 +78,19 @@ fn snake_body() -> PyResult<Vec<(i16, i16)>> {
 /// import the module.
 #[pymodule]
 fn snake(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
-    m.add_function(wrap_pyfunction!(reset, m)?)?;
-    m.add_function(wrap_pyfunction!(state, m)?)?;
-    m.add_function(wrap_pyfunction!(state_model, m)?)?;
-    m.add_function(wrap_pyfunction!(tick, m)?)?;
-    m.add_function(wrap_pyfunction!(score, m)?)?;
-    m.add_function(wrap_pyfunction!(input, m)?)?;
-    m.add_function(wrap_pyfunction!(done, m)?)?;
-    m.add_function(wrap_pyfunction!(tick_count, m)?)?;
-    m.add_function(wrap_pyfunction!(food, m)?)?;
-    m.add_function(wrap_pyfunction!(head, m)?)?;
-    m.add_function(wrap_pyfunction!(input_turn, m)?)?;
-    m.add_function(wrap_pyfunction!(snake_dir, m)?)?;
-    m.add_function(wrap_pyfunction!(snake_body, m)?)?;
+    m.add_class::<PyGame>()?;
+    // m.add_function(wrap_pyfunction!(reset, m)?)?;
+    // m.add_function(wrap_pyfunction!(state, m)?)?;
+    // m.add_function(wrap_pyfunction!(state_model, m)?)?;
+    // m.add_function(wrap_pyfunction!(tick, m)?)?;
+    // m.add_function(wrap_pyfunction!(score, m)?)?;
+    // m.add_function(wrap_pyfunction!(input, m)?)?;
+    // m.add_function(wrap_pyfunction!(done, m)?)?;
+    // m.add_function(wrap_pyfunction!(tick_count, m)?)?;
+    // m.add_function(wrap_pyfunction!(food, m)?)?;
+    // m.add_function(wrap_pyfunction!(head, m)?)?;
+    // m.add_function(wrap_pyfunction!(input_turn, m)?)?;
+    // m.add_function(wrap_pyfunction!(snake_dir, m)?)?;
+    // m.add_function(wrap_pyfunction!(snake_body, m)?)?;
     Ok(())
 }

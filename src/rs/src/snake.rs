@@ -8,7 +8,7 @@ pub enum Direction {
     Right,
 }
 
-#[derive(PartialEq)]
+#[derive(Clone, PartialEq)]
 pub struct Snake {
     body: Vec<(i16, i16)>,
     d: Direction,
@@ -36,8 +36,8 @@ impl Snake {
     // Returns new dir
     pub fn dir(&mut self, dir: Direction) -> Direction {
         if ![&dir, &self.d]
-                .iter()
-                .all(|&d| [Direction::Top, Direction::Bottom].contains(d))
+            .iter()
+            .all(|&d| [Direction::Top, Direction::Bottom].contains(d))
             && ![&dir, &self.d]
                 .iter()
                 .all(|&d| [Direction::Left, Direction::Right].contains(d))

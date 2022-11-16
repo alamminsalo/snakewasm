@@ -1,14 +1,13 @@
 extern crate rand;
 
-use rand::seq::SliceRandom;
-
+use crate::snake::{Direction, Snake};
 use crate::util;
-use crate::{snake::Snake, Direction};
-
+use ndarray::Array;
+use rand::seq::SliceRandom;
 use wasm_bindgen::prelude::*;
 
 #[derive(PartialEq)]
-//#[wasm_bindgen]
+#[wasm_bindgen]
 pub struct Game {
     w: u16,
     h: u16,
@@ -18,7 +17,20 @@ pub struct Game {
     tick_count: usize,
 }
 
+#[wasm_bindgen]
 impl Game {
+    #[wasm_bindgen(constructor)]
+    pub fn new(width: u16, height: u16) -> Game {
+        Game {
+            w: width,
+            h: height,
+            snakes: vec![Snake::new()],
+            food: None,
+            ended: false,
+            tick_count: 0,
+        }
+    }
+
     pub fn width(&self) -> u16 {
         self.w
     }
@@ -27,12 +39,37 @@ impl Game {
         self.h
     }
 
-    pub fn get_snake(&mut self) -> &mut Snake {
+    pub fn input(&mut self, cmd: u8) {
+        match cmd {
+            0 => self.mut_snake().dir(Direction::Top),
+            1 => self.mut_snake().dir(Direction::Bottom),
+            2 => self.mut_snake().dir(Direction::Left),
+            _ => self.mut_snake().dir(Direction::Right),
+        };
+    }
+
+    pub fn input_turn(&mut self, cmd: u8) {
+        match cmd {
+            1 => self.mut_snake().turn_left(),
+            2 => self.mut_snake().turn_right(),
+            _ => {}
+        }
+    }
+
+    fn snake(&self) -> Snake {
+        self.snakes[0].clone()
+    }
+
+    fn mut_snake(&mut self) -> &mut Snake {
         &mut self.snakes[0]
     }
 
-    pub fn get_food(&self) -> &Option<(i16, i16)> {
-        &self.food
+    fn food(&self) -> Option<(i16, i16)> {
+        self.food
+    }
+
+    pub fn score(&self) -> usize {
+        self.snake().body().len() - 4
     }
 
     pub fn set_food(&mut self, x: i16, y: i16) {
@@ -47,18 +84,6 @@ impl Game {
         self.ended
     }
 
-    // Creates a new game
-    pub fn new(width: u16, height: u16) -> Game {
-        Game {
-            w: width,
-            h: height,
-            snakes: vec![Snake::new()],
-            food: None,
-            ended: false,
-            tick_count: 0,
-        }
-    }
-
     //fn in_bounds(dim: (u16, u16), pos: (i16, i16)) -> bool {
     //    pos.0 >= 0 && (pos.0 as u16) < dim.0 && pos.1 >= 0 && (pos.1 as u16) < dim.1
     //}
@@ -71,9 +96,7 @@ impl Game {
         )
     }
 
-    pub fn reset(&mut self, w: u16, h: u16) {
-        self.w = w;
-        self.h = h;
+    pub fn reset(&mut self) {
         self.snakes = vec![Snake::new()];
         self.food = None;
         self.ended = false;
@@ -87,9 +110,10 @@ impl Game {
             let dim = (self.w, self.h);
             for snake in self.snakes.iter_mut() {
                 let peeked = snake.peek();
+                let body_len = snake.body().len() - 1; // body len without head
 
-                // hitting self ends game
-                if snake.body()[1..].contains(&peeked) {
+                // hitting self ends game, trim last bit of tail off when considering hitting self
+                if snake.body()[1..body_len - 1].contains(&peeked) {
                     self.ended = true;
                 } else {
                     // no wall, move to location
@@ -146,6 +170,86 @@ impl Game {
             Direction::Bottom => 2,
             Direction::Left => 3,
         }
+    }
+
+    pub fn state(&self) -> Vec<i8> {
+        let width = self.width() as usize;
+        let height = self.height() as usize;
+
+        let (food_x, food_y) = self.food().unwrap();
+        let snake = self.snake();
+        let mut body_iter = snake.body().iter();
+
+        // empty board with 0
+        let mut state = vec![vec![2; width]; height];
+
+        // food
+        state[food_y as usize][food_x as usize] = 3;
+
+        // head
+        if let Some((head_x, head_y)) = body_iter.next() {
+            state[*head_y as usize][*head_x as usize] = 1;
+        }
+
+        // body
+        for (snake_x, snake_y) in body_iter {
+            state[*snake_y as usize][*snake_x as usize] = 0;
+        }
+
+        state.into_iter().flatten().collect()
+    }
+
+    pub fn state_model(&self) -> Vec<f32> {
+        let width = self.width() as usize;
+        let height = self.height() as usize;
+
+        let body_all = self.snake().body().clone();
+        let head = &body_all[..1][0].clone();
+        let body = &body_all[1..];
+
+        // get food distance matrix, rolled to food position
+        let food = self.food().unwrap();
+        let center = (width as i16 / 2, height as i16 / 2);
+        let mut m_state =
+            util::roll_2d(util::dist_2d(width, height), util::dist_coord(food, center));
+
+        // add body weight matrix, replacing cell values with body weights (negative)
+        m_state = util::add_weight_matrix(m_state, body);
+
+        // center matrix to head
+        m_state = util::roll_2d(m_state, util::dist_coord(center, *head));
+
+        // set head position to 0
+        *m_state
+            .get_mut((center.0 as usize, center.1 as usize))
+            .unwrap() = 0.0;
+
+        // rotate array to face always into current direction of the snake (upwards)
+        m_state = util::rot90(m_state, 4 - self.snake_dir() as usize);
+
+        // return as 1d vec
+        Array::from_iter(m_state.iter().cloned()).to_vec()
+    }
+
+    pub fn state_params(&self) -> Vec<u8> {
+        let head = self.snake().head();
+        vec![head.0 as u8, head.1 as u8, self.snake_dir()]
+    }
+
+    // Javascript API for getting structs
+    #[cfg(feature = "js")]
+    pub fn state_js(&self) -> JsValue {
+        serde_wasm_bindgen::to_value(&self.state()).unwrap()
+    }
+
+    #[cfg(feature = "js")]
+    pub fn state_model_js(&self) -> JsValue {
+        serde_wasm_bindgen::to_value(&self.state_model()).unwrap()
+    }
+
+    #[cfg(feature = "js")]
+    pub fn state_params_js(&self) -> JsValue {
+        serde_wasm_bindgen::to_value(&self.state_params()).unwrap()
     }
 }
 

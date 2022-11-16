@@ -1,0 +1,33 @@
+version: '3'
+
+tasks:
+  default:
+    desc: Builds debug binary
+    cmds:
+      - cargo build
+    silent: true
+
+  release:
+    desc: Builds release binary
+    cmds:
+      - cargo build --release
+    silent: true
+
+  clean:
+    desc: Cleans up directory
+    cmds:
+      - cargo clean
+      - rm -rf pkg
+    silent: true
+
+  wasm:
+    desc: Builds webassembly bundle
+    cmds:
+      - wasm-pack build --target web --release --features js
+    silent: true
+
+  pywheel:
+    desc: Builds python wheel lib
+    cmds:
+      - maturin build -F py
+    silent: true

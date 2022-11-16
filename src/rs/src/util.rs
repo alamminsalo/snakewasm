@@ -1,7 +1,7 @@
 use ndarray::{s, Array, Array2, Axis};
 
 // Returns 0..-1 matrix based on coordinate order on input.
-// Smaller value is closer to head of the body.
+// Smaller value is closer to tail of the body.
 // Coordinates not present on input vec are set to 0.
 pub fn add_weight_matrix(mut dest: Array2<f32>, input: &[(i16, i16)]) -> Array2<f32> {
     let shape = dest.shape();
@@ -9,7 +9,7 @@ pub fn add_weight_matrix(mut dest: Array2<f32>, input: &[(i16, i16)]) -> Array2<
     let h = shape[1];
     let div = w as f32 * h as f32;
 
-    for (i, (x, y)) in input.into_iter().rev().enumerate().skip(1) {
+    for (i, (x, y)) in input.into_iter().rev().skip(1).enumerate() {
         // calculate body weight value in 0..1
         let w = i as f32 / div;
         *dest.get_mut((*y as usize, *x as usize)).unwrap() = -w;
