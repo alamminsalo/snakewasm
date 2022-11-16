@@ -12,15 +12,15 @@ export const rotate = (arr, n = 1) => {
   while (n-- > 0) {
     for (let i = 0; i < x; i++) {
        for (let j = i; j < y - i; j++) {
-          k = arr[i][j];
+          const k = arr[i][j];
           arr[i][j] = arr[y - j][i];
           arr[y - j][i] = arr[y - i][y - j];
-          arr[y - i][y - j] = arr[j][y - i]
-          arr[j][y - i] = k
+          arr[y - i][y - j] = arr[j][y - i];
+          arr[j][y - i] = k;
        }
     }
   }
-  return arr
+  return arr;
 }
 
 // console.log(
@@ -58,8 +58,8 @@ export const rotate = (arr, n = 1) => {
 // pans input 2d array by offset x, y
 export const translate = (a, x, y) => {
   // y-axis
-  let b = a.splice(y * -1)
-  a = b.concat(a)
+  let b = a.splice(y * -1);
+  a = b.concat(a);
   a = rotate(a, 1);
 
   // x-axis
