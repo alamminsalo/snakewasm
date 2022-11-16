@@ -8,7 +8,7 @@
  */
 import Vue from 'vue';
 import { initialize } from './game.js';
-
+  
 initialize().then((game) => {
   let app = new Vue({
     el: '#app',

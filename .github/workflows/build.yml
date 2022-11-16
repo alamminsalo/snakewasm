@@ -35,7 +35,7 @@ jobs:
         run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
 
       - name: Run wasm-pack
-        run: wasm-pack build --target web --release
+        run: wasm-pack build --target web --release --features js
         working-directory: ./src/rs
 
       - name: Install NPM deps

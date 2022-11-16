@@ -5,140 +5,48 @@
  * Also handles loading and predicting next input with neural network model.
  *
  */
-import init, { state_js, state_model_js, state_params_js } from './rs/pkg';
+import init, { Game } from './rs/pkg';
 import * as tractjs from 'tractjs';
-
-// chunks array to n parts
-const chunked = (arr, n) =>
-  Array.from({ length: Math.ceil(arr.length / n) }, (_, i) =>
-    arr.slice(i * n, i * n + n),
-  );
-
-// rotates array n times clockwise
-const rotate = (arr, n = 1) => {
-  const x = Math.floor(arr.length/ 2);
-  const y = arr.length - 1;
-  while (n-- > 0) {
-    for (let i = 0; i < x; i++) {
-       for (let j = i; j < y - i; j++) {
-          k = arr[i][j];
-          arr[i][j] = arr[y - j][i];
-          arr[y - j][i] = arr[y - i][y - j];
-          arr[y - i][y - j] = arr[j][y - i]
-          arr[j][y - i] = k
-       }
-    }
-  }
-  return arr
-}
-
-// console.log(
-//   rotate(
-//     [
-//       [1,1,1],
-//       [2,2,2],
-//       [3,3,3]
-//     ],
-//     1
-//   ),
-//     [
-//       [3,2,1],
-//       [3,2,1],
-//       [3,2,1],
-//     ],
-// );
-// 
-// console.log(
-//   rotate(
-//     [
-//       [1,1,1],
-//       [2,2,2],
-//       [3,3,3]
-//     ],
-//     3
-//   ),
-//     [
-//       [1,2,3],
-//       [1,2,3],
-//       [1,2,3],
-//     ],
-// );
-
-// pans input 2d array by offset x, y
-const translate = (a, x, y) => {
-  // y-axis
-  let b = a.splice(y * -1)
-  a = b.concat(a)
-  a = rotate(a, 1);
-
-  // x-axis
-  b = a.splice(x * -1);
-  a = b.concat(a)
-  a = rotate(a, 3);
-
-  return a;
-}
-
-//console.log(
-//  'test positive translate',
-//  translate(
-//    [
-//      [1,2,3],
-//      [4,5,6],
-//      [7,8,9]
-//    ],
-//    0, 1
-//  ),
-//);
-//
-//console.log(
-//  'test negative translate',
-//  translate(
-//    [
-//      [1,2,3],
-//      [4,5,6],
-//      [7,8,9]
-//    ],
-//    0, -1
-//  ),
-//);
+import { chunked, rotate, translate } from './utils';
 
 export const initialize = async () => {
   self.width = 9;
   self.height = 9;
 
   // load game wasm
-  const snake = await init();
+  console.log('loading wasm...');
+  await init();
+  self.game = new Game(width, height);
 
   // load onnx model
+  console.log('loading onnx model...');
   const model = await tractjs.load('./snake.onnx', {
     inputFacts: {
-      0: ['float32', [1, 9, 9, 1]],
+      0: ['float32', [1, 81]],
     },
   });
 
-  self.score = () => {
-    return snake.score();
-  };
+  console.log('setting up...');
+  self.score = () => self.game.score();
 
   self.reset = async () => {
-    snake.reset(self.width, self.height);
-    return await self.tick();
+    self.game.reset(self.width, self.height);
+    return await self.game.tick();
   };
 
   self.tick = async () => {
-    snake.tick();
+    self.game.tick();
     return await self.state();
   };
 
   self.state = async () => {
-    let state = chunked(state_js(), self.width):
+    let state = chunked(self.game.state_js(), self.width):
     const cx = Math.floor(self.width / 2)
     const cy = Math.floor(self.height / 2)
 
     // view as neural network input
     const [q, _] = await self.calc_q();
-    const [x, y, r] = state_params_js();
+    const [x, y, r] = self.game.state_params_js();
 
     // translate state to center
     state = translate(state, cx - x, cy - y);
@@ -172,11 +80,11 @@ export const initialize = async () => {
   };
 
   self.is_done = () => {
-    return snake.is_ended();
+    return self.game.is_ended();
   };
 
   self.input = (cmd) => {
-    snake.input(cmd);
+    self.game.input(cmd);
   };
 
   // toggles between viewing game as player or nn perspective
@@ -189,9 +97,9 @@ export const initialize = async () => {
   // calculates q values for current state
   self.calc_q = async () => {
     // get current model state
-    const state = state_model_js();
+    const state = self.game.state_model_js();
     const pred = await model.predict([
-      new tractjs.Tensor(new Float32Array(state), [1, 9, 9, 1]),
+      new tractjs.Tensor(new Float32Array(state), [1, 81]),
     ]);
 
     // get index of maximum predicted Q-value
@@ -207,23 +115,23 @@ export const initialize = async () => {
     const action = q.indexOf(max_q);
 
     // pass action as input_turn param to game
-    snake.input_turn(action);
+    self.game.input_turn(action);
 
     return q;
   };
 
   // player inputs
-  self.up = () => snake.input(0);
-  self.down = () => snake.input(1);
-  self.left = () => snake.input(2);
-  self.right = () => snake.input(3);
+  self.up = () => self.game.input(0);
+  self.down = () => self.game.input(1);
+  self.left = () => self.game.input(2);
+  self.right = () => self.game.input(3);
 
   self.set_food = (x, y) => {
-    snake.set_food(x, y);
+    self.game.set_food(x, y);
   };
 
   // debugging
-  // window.snake = snake;
+  // window.game = self.game
 
   return self;
 };
