@@ -160,6 +160,7 @@
 .qvalue {
   pointer-events: none;
   color: #aaa;
+  position: absolute;
 }
 
 .qhighest {
