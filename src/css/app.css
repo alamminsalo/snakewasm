@@ -158,6 +158,7 @@
 }
 
 .qvalue {
+  pointer-events: none;
   color: #aaa;
 }
 
