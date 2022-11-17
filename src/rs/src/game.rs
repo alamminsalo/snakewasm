@@ -110,10 +110,8 @@ impl Game {
             let dim = (self.w, self.h);
             for snake in self.snakes.iter_mut() {
                 let peeked = snake.peek();
-                let body_len = snake.body().len() - 1; // body len without head
-
                 // hitting self ends game, trim last bit of tail off when considering hitting self
-                if snake.body()[1..body_len - 1].contains(&peeked) {
+                if snake.body()[1..snake.body().len() - 1].contains(&peeked) {
                     self.ended = true;
                 } else {
                     // no wall, move to location
